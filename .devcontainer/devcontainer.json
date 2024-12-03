@@ -1,0 +1,20 @@
+{
+    "dockerComposeFile": "compose.yml",
+    "service": "workspace",
+    "workspaceFolder": "/project-web-frontend",
+    "remoteUser": "root",
+    "initializeCommand": "bash .devcontainer/HIU-FW.sh",
+    "features": {},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bradlc.vscode-tailwindcss",
+                "ms-azuretools.vscode-docker",
+                "EditorConfig.EditorConfig",
+                "ms-vscode.makefile-tools",
+                "donjayamanne.git-extension-pack",
+                "ms-vscode.live-server"
+            ]
+        }
+    }
+}
