@@ -32,8 +32,8 @@ $ npm run dev
 
 ### どこに書くの?
 
-- `/public` ディレクトリ上にhtmlを生やしていく  
-- `/public/hogehoge/index.html` のようにファイルがあった場合、`http://localhost/hogehoge` でページを閲覧できるようになる  
+- `/views` ディレクトリ上にhtmlを生やしていく  
+- `/views/hogehoge/index.html` のようにファイルがあった場合、`http://localhost/hogehoge` でページを閲覧できるようになる  
 
 
 ### コードを書く前に
