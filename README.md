@@ -6,7 +6,7 @@
 - Docker
 
 
-## インストール
+## 環境構築
 
 ```bash
 # GitHubからプログラムをダウンロード
@@ -17,7 +17,9 @@ $ code ./project-web-frontend
 ```
 
 > [!WARNING]  
-> VSCodeに"DevContainer"の拡張機能と、Dockerがインストールされているのが前提です
+> DockerのインストールとVSCodeに"DevContainers"の拡張機能が追加されているのが前提です
+
+<br>
 
 1. `ctrl` + `shift` + `p` を同時に押す
 2. 上部に出てきたパレットで、`Dev Containers: Reopen in container` を選択する
