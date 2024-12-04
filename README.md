@@ -6,8 +6,33 @@
 - Docker
 
 
-## 起動
+## インストール
 
+```bash
+# GitHubからプログラムをダウンロード
+$ git clone https://github.com/HIU-Bombers/project-web-frontend.git
+
+# VisualStudioCodeを開く
+$ code ./project-web-frontend
+```
+
+> [!WARNING]  
+> VSCodeに"DevContainer"の拡張機能と、Dockerがインストールされているのが前提です
+
+1. `ctrl` + `shift` + `p` を同時に押す
+2. 上部に出てきたパレットで、`Dev Containers: Reopen in container` を選択する
+
+
+![open-devcontainer](docs/assets/readme.open-devcontainer.png)
+
+> [!TIP]  
+> DevContainerとは、プログラムを開発するための作業環境を、簡単に作成して使える仕組みのことです。  
+> 構築される作業環境には以下のようなものが含まれます。
+> - OS
+> - 開発をする上で必要なアプリケーション
+> - VSCodeの拡張機能
+
+## 起動
 
 ### 初回実行
 
