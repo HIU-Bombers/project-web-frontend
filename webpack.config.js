@@ -18,6 +18,7 @@ module.exports = {
       paths: ['views/**/*'],
       options: {
         usePolling: true,
+        poll: 500,
       },
     },
     static: [

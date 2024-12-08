@@ -1,13 +1,12 @@
 {
   "scripts": {
-    "dev": "webpack serve --config webpack.config.js --static-watch",
+    "dev": "webpack serve --config webpack.config.js --static-watch & nodemon dist/bundle.js",
     "build": "webpack"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "css-loader": "^7.1.2",
     "html-loader": "^5.1.0",
-    "html-webpack-plugin": "^5.6.3",
     "mini-css-extract-plugin": "^2.9.2",
     "nodemon": "^3.1.7",
     "postcss": "^8.4.49",
