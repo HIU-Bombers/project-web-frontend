@@ -1,5 +1,6 @@
 const path = require('path');
 
+
 module.exports = {
   mode: 'development',
   entry: './src/index.js',
@@ -10,17 +11,24 @@ module.exports = {
   },
   devServer: {
     hot: true,
+    open: true,
     host: '0.0.0.0',
     port: 3000,
+    watchFiles: {
+      paths: ['views/**/*'],
+      options: {
+        usePolling: true,
+      },
+    },
     static: [
       {
         directory: path.join(__dirname, 'views'),
       },
       {
         directory: path.join(__dirname, 'assets'),
+        publicPath: "/assets"
       }
     ],
-    compress: true,
     headers: {
       'Access-Control-Allow-Origin': '*'
     }

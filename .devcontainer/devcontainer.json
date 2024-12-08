@@ -13,7 +13,8 @@
                 "EditorConfig.EditorConfig",
                 "ms-vscode.makefile-tools",
                 "donjayamanne.git-extension-pack",
-                "ms-vscode.live-server"
+                "ms-vscode.live-server",
+                "ecmel.vscode-html-css"
             ]
         }
     }
