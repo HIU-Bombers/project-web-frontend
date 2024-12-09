@@ -11,23 +11,23 @@
     <section class="bg-white rounded-xl h-fit m-12 p-3 shadow-md">
       <h2 class="text-xl font-extrabold mx-auto mt-3 w-fit text-gray-700">アカウントを作成</h2>
       
-      <form class="w-fit mx-auto mt-4 flex flex-col justify-between h-60">
+      <form onsubmit="onSubmit(event)" class="w-fit mx-auto mt-4 flex flex-col justify-between h-60">
         <sectoin class="flex flex-col justify-around space-y-2">
           <div>
-            <p class="text-sm text-gray-600">メールアドレス</p>
-            <input type="email" class="bg-gray-100 shadow-md rounded-md">
+            <label for="email" class="text-sm text-gray-600">メールアドレス</label>
+            <input name="email" type="email" required class="bg-gray-100 shadow-md rounded-md">
           </div>
           <div>
-            <p class="text-sm text-gray-600">パスワード</p>
-            <input type="password" class="bg-gray-100 shadow-md rounded-md">  
+            <label for="password" class="text-sm text-gray-600">パスワード</label>
+            <input name="password" type="password" required class="bg-gray-100 shadow-md rounded-md">  
           </div>
           <div>
-            <p class="text-sm text-gray-600">パスワード (確認用)</p>
-            <input type="password" class="bg-gray-100 shadow-md rounded-md">
+            <label for="confirm-password" class="text-sm text-gray-600">パスワード (確認用)</label>
+            <input name="confirm-password" type="password" required class="bg-gray-100 shadow-md rounded-md">
           </div>
         </sectoin>
         <section class="mx-auto mt-8">
-          <button type="button" onclick="onSubmit()" class="bg-sky-700 text-white font-bold py-2 px-8 rounded-md drop-shadow-md hover:bg-sky-800">
+          <button type="submit" class="bg-sky-700 text-white font-bold py-2 px-8 rounded-md drop-shadow-md hover:bg-sky-800">
             次に進む
           </button>
         </section>
@@ -41,7 +41,20 @@
 
   <script src="/dist/bundle.js"></script>
   <script>
-    function onSubmit() {
+    async function onSubmit(event) {
+      event.preventDefault()
+
+      const form = new FormData(event.target);
+      const email = form.get("email");
+      const password = form.get("password");
+      const confirmPassword = form.get("confirm-password");
+
+      if (null === email) {
+        return;
+      }
+
+      
+      
       window.location = '/login';
     }
   </script>
