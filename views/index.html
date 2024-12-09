@@ -4,45 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home | HIU食堂 Web食券販売</title>
-  <script src="/dist/bundle.js"></script>
 </head>
 <body class="bg-gray-100 flex flex-col justify-between h-dvh">
-  <header class="bg-white border-b-gray-400 border-b-4">
-    <div class="container mx-auto flex justify-between items-center py-4 px-6">
-      <div class="text-2xl font-bold">
-        <a href="#" class="hover:text-blue-300">Home</a>
-      </div>
+  <header id="header"></header>
+  <main class="h-lvh flex flex-col justify-start space-y-7">
+    <section class="flex flex-row justify-around mx-2 mt-3 h-32">
+      <button class="bg-white shadow-lg w-2/5 rounded-sm hover:bg-gray-50">食券を買う</button>
+      <button class="bg-white shadow-lg w-2/5 rounded-sm hover:bg-gray-50">食券を使う</button>
+    </section>
 
-      <button class="md:hidden focus:outline-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    </div>
-  </header>
+    <section>
+      <h1 class="font-extrabold text-gray-600 text-2xl mx-10">本日の定食</h1>
+    </section>
 
-  <main class="h-lvh flex flex-col justify-start">
-    <section class="bg-white rounded-xl h-32 m-3 p-3 shadow-md">
-      <h2 class="text-xl font-bold">お知らせ</h2>
+    <section class="">
+
     </section>
   </main>
+  <footer id="footer"></footer>
 
-  <footer class="bg-slate-800 mt-12 shadow-inner">
-    <div class="container mx-auto py-6 px-6">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="text-lg font-bold text-gray-600">
-          <a href="#" class="hover:text-gray-500">HIU学食 Web食券販売</a>
-        </div>
-        <nav class="mt-4 md:mt-0 flex space-x-4 text-gray-600">
-          <a href="#" class="hover:text-gray-500">プライバシー</a>
-          <a href="#" class="hover:text-gray-500">利用規約</a>
-          <a href="#" class="hover:text-gray-500">お問い合わせ</a>
-        </nav>
-      </div>
-      <div class="text-center text-sm text-gray-500 mt-6">
-        &copy; 2024 HIU Bombers. All Rights Reserved.
-      </div>
-    </div>
-  </footer>
+  <script src="/dist/bundle.js"></script>
 </body>
 </html>
