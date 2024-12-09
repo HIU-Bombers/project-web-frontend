@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "webpack serve --config webpack.config.js --static-watch",
+    "start": "node server.js",
+    "webpack": "webpack serve --config webpack.config.js --static-watch",
     "build": "webpack"
   },
   "devDependencies": {
@@ -14,6 +15,13 @@
     "tailwindcss": "^3.4.15",
     "webpack": "^5.97.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
+    "webpack-dev-middleware": "^7.4.2",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-hot-middleware": "^2.26.1"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.1",
+    "express": "^4.21.2",
+    "lit-html": "^3.2.1"
   }
 }
