@@ -8,19 +8,16 @@
 <body class="bg-gray-100 flex flex-col justify-between h-dvh">
   <header id="header"></header>
   <main class="h-lvh flex flex-col justify-start space-y-7">
-    <section class="flex flex-row justify-around mx-2 mt-3 h-32">
-      <button class="bg-white shadow-lg w-2/5 rounded-sm hover:bg-gray-50">食券を買う</button>
-      <button class="bg-white shadow-lg w-2/5 rounded-sm hover:bg-gray-50">食券を使う</button>
+    <section class="flex flex-row justify-around mx-2 mt-3 max-w-4xl">
+      <img src="assets/buy.btn.png" class="w-2/5 max-w-72 h-auto rounded-lg shadow-lg hover:brightness-[90%]">
+      <img src="assets/use.btn.png" class="w-2/5 max-w-72 h-auto rounded-lg shadow-lg hover:brightness-[90%]">
     </section>
 
     <section>
       <h1 class="font-extrabold text-gray-600 text-2xl mx-10">本日の定食</h1>
     </section>
-
-    <section class="">
-
-    </section>
   </main>
+  <nav id="menu"></nav>
   <footer id="footer"></footer>
 
   <script src="/dist/bundle.js"></script>

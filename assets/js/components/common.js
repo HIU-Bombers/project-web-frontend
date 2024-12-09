@@ -1,6 +1,7 @@
 import { html } from "lit-html"
+import { renderComponent } from "../util";
 
-export const Header = () => html`
+const Header = html`
   <section class="bg-white border-b-blue-900 border-b-4">
     <div class="container mx-auto flex justify-between items-center py-2 px-6">
       <div class="flex flex-row space-x-2">
@@ -13,8 +14,8 @@ export const Header = () => html`
   </section>
 `;
 
-export const Footer = () => html`
-  <section class="bg-slate-800 mt-12 shadow-inner">
+const Footer = html`
+  <section class="bg-slate-800 shadow-inner">
     <div class="container mx-auto py-6 px-6">
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div class="text-lg font-bold text-gray-600">
@@ -32,3 +33,8 @@ export const Footer = () => html`
     </div>
   </section>
 `;
+
+export const registerCommonComponents = () => {
+  renderComponent(Header, 'header');
+  renderComponent(Footer, 'footer');
+};
