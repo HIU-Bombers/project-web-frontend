@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>サインアップ | HIU食堂 Web食券販売</title>
+  <title>ログイン | HIU食堂 Web食券販売</title>
 </head>
 <body class="bg-gray-100 flex flex-col justify-between h-dvh font-sans">
   <header id="header"></header>
@@ -14,7 +14,7 @@
       <form class="w-fit mx-auto mt-4 flex flex-col justify-between h-56">
         <sectoin class="flex flex-col justify-around space-y-2">
           <div>
-            <p class="text-sm text-gray-600">メールアドレス</p>
+            <p class="text-sm text-gray-600">ログイン</p>
             <input type="email" class="bg-gray-100 shadow-md rounded-md">
           </div>
           <div>
@@ -22,25 +22,21 @@
             <input type="password" class="bg-gray-100 shadow-md rounded-md">  
           </div>
         
-          <div>
-            <p class="text-sm text-gray-600">パスワード (確認用)</p>
-            <input type="password" class="bg-gray-100 shadow-md rounded-md">
-          </div>
         </sectoin>
         <section class="mx-auto mt-8">
           <button type="button" onclick="onSubmit()" class="bg-sky-700 text-white font-bold py-2 px-8 rounded-md drop-shadow-md hover:bg-sky-800">
-            次に進む
+            ログイン
           </button>
         </section>
       </form>
     </section>
   </main>
   <footer id="footer"></footer>
-
+  
   <script src="/dist/bundle.js"></script>
   <script>
     function onSubmit() {
-      window.location = '/login';
+      window.location = '/';
     }
   </script>
 </body>

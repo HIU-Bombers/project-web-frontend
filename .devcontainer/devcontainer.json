@@ -14,7 +14,8 @@
                 "ms-vscode.makefile-tools",
                 "donjayamanne.git-extension-pack",
                 "ms-vscode.live-server",
-                "ecmel.vscode-html-css"
+                "ecmel.vscode-html-css",
+                "bierner.lit-html"
             ]
         }
     }
