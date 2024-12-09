@@ -1,8 +1,11 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.js',
+  entry: {
+    main: ['webpack-hot-middleware/client?reload=true', './src/index.js'],
+  },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
@@ -10,17 +13,25 @@ module.exports = {
   },
   devServer: {
     hot: true,
+    open: ['/home'],
     host: '0.0.0.0',
     port: 3000,
+    watchFiles: {
+      paths: ['views/**/*'],
+      options: {
+        usePolling: true,
+        poll: 500,
+      },
+    },
     static: [
       {
         directory: path.join(__dirname, 'views'),
       },
       {
         directory: path.join(__dirname, 'assets'),
+        publicPath: "/assets"
       }
     ],
-    compress: true,
     headers: {
       'Access-Control-Allow-Origin': '*'
     }
@@ -33,4 +44,7 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+  ],
 };

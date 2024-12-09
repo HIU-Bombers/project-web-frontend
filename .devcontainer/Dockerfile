@@ -6,7 +6,8 @@ RUN apt update -qy && \
     apt install -qy \
         ca-certificates \
         openssl \
-        locales
+        locales \
+        vim
 
 # 情報大Wi-Fiの証明書インポート
 COPY singed_HIU-FW.crt /usr/local/share/ca-certificates/HIU-FW.crt
