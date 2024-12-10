@@ -4,7 +4,10 @@ const webpack = require('webpack');
 module.exports = {
   mode: 'development',
   entry: {
-    main: ['webpack-hot-middleware/client?reload=true', './src/index.js'],
+    main: [
+      'webpack-hot-middleware/client?reload=true',
+      './src/entrypoint.js'
+    ],
   },
   output: {
     filename: 'bundle.js',
@@ -33,7 +36,7 @@ module.exports = {
       }
     ],
     headers: {
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': 'http://localhost:9000'
     }
   },
   module: {

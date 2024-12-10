@@ -1,46 +1,64 @@
-const express = require('express');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
 const path = require('path');
-const chokidar = require('chokidar');
-
+const express = require('express');
+const cookieParser = require('cookie-parser');
 const app = express();
-const config = require('./webpack.config.js');
 
-const compiler = webpack(config);
+function getSessionId(req) {
+  return req.cookies.PROJECT_BASICS__SESSION_ID ?? null;
+}
 
-// dist以下のbundleを監視
-app.use(
-  webpackDevMiddleware(compiler, {
-    publicPath: config.output.publicPath,
-  })
-);
+function requireLogin(req, res, next) {
+  if (null === getSessionId(req)) {    
+    res.redirect('/login');
+    return;
+  }
 
-// ホットリロードの有効化
-app.use(
-  webpackHotMiddleware(compiler, {
-    log: console.log,
-    heartbeat: 2000,
-    reload: true,
-  })
-);
+  next();
+}
 
-// 静的ファイルのサーブ
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.use(express.static(path.join(__dirname, 'views')));
+function requireLogout(req, res, next) {
+  if (null !== getSessionId(req)) {
+    res.redirect('/home');
+    return;
+  }
 
-// ファイルの変更を監視
-const watcher = chokidar.watch(path.join(__dirname, 'views'), {
-  persistent: true,
+  next();
+}
+
+app.use(cookieParser());
+
+// middleware
+// require login
+app.use('/home', requireLogin, express.static('views/home'));
+
+// // require logout
+app.use('/login', requireLogout, express.static('views/login'));
+app.use('/signup', requireLogout, express.static('views/signup'));
+
+// serve static files
+app.use('/dist', express.static('dist'));
+app.use('/assets', express.static('assets'));
+app.use('/', express.static('views'));
+
+// api
+app.post('/logout', async (req, res) => {
+  console.log(getSessionId(req) ?? "none");
+  
+  const signoutRes = await fetch("http://localhost:9000/signout",{
+    method: "POST",
+    credentials: 'include',
+    headers: {
+      // "Authorization": `Bearer ${getSessionId(req)}`
+    }
+  });
+
+  console.log(signoutRes.status);
+
+  if (200 !== signoutRes.status) {
+    return;
+  }
 });
 
-watcher.on('change', (filePath) => {
-  console.log(`File changed: ${filePath}`);
-  compiler.watch({}, () => {});  // webpackの実行
-});
-
-const PORT = 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });

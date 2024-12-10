@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "start": "node server.js",
-    "webpack": "webpack serve --config webpack.config.js --static-watch",
-    "build": "webpack"
+    "build": "webpack build",
+    "dev": "webpack serve",
+    "serve": "node server.js"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
@@ -20,8 +20,8 @@
     "webpack-hot-middleware": "^2.26.1"
   },
   "dependencies": {
-    "axios": "^1.7.9",
     "chokidar": "^4.0.1",
+    "cookie-parser": "^1.4.7",
     "express": "^4.21.2",
     "lit-html": "^3.2.1"
   }
