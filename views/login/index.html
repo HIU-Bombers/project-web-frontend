@@ -38,10 +38,7 @@
   <footer id="footer"></footer>
   
   <script type="module" src="/dist/bundle.js"></script>
-  <script>
-    console.log("cookie");
-    console.log(document.cookie.split(";"));
-      
+  <script>      
     async function onSubmit(event) {
       event.preventDefault()
 
@@ -55,8 +52,6 @@
       } catch (err) {
         return;
       }
-      console.log("cookie");
-      console.log(document.cookie.split(";"));
       window.location = '/home';
     }
 

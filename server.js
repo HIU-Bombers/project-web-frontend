@@ -42,21 +42,30 @@ app.use('/', express.static('views'));
 
 // api
 app.post('/logout', async (req, res) => {
-  console.log(getSessionId(req) ?? "none");
+  res.clearCookie('PROJECT_BASICS__SESSION_ID');
   
-  const signoutRes = await fetch("http://localhost:9000/signout",{
-    method: "POST",
-    credentials: 'include',
-    headers: {
-      // "Authorization": `Bearer ${getSessionId(req)}`
-    }
-  });
+  // const signoutRes = await fetch("http://localhost:9000/signout",{
+  //   method: "POST",
+  //   mode: 'cors',
+  //   credentials: 'include',
+  // });
+  
+  // console.log(signoutRes.status);
+  // console.log(signoutRes.headers);
+  // console.log(signoutRes.body);
+  // console.log((await signoutRes.text()));
 
-  console.log(signoutRes.status);
+  // if (200 !== signoutRes.status) {
+  //   res.sendStatus(signoutRes.status);
+  //   return;
+  // }
+  res.sendStatus(200);
+});
 
-  if (200 !== signoutRes.status) {
-    return;
-  }
+app.post('/sessioncheck', async (req, res) => {
+  res.json({
+    "isLoggedIn": null !== getSessionId(req)
+  })
 });
 
 app.listen(3000, () => {

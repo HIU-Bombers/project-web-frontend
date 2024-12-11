@@ -42,7 +42,7 @@ const Account = html`
         <img src="/assets/imgs/account.png" class="w-6 h-auto mt-2" alt="Account">
       </summary>
 
-      <button type="button" @onclick=${logout()} class="z-10 flex flex-row origin-top-right absolute right-0 mt-2 mx-auto w-28 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hover:bg-gray-100">
+      <button type="button" @click=${logout} class="z-10 flex flex-row origin-top-right absolute right-0 mt-2 mx-auto w-28 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hover:bg-gray-100">
         <p class="z-10 x-block w-fit text-left mx-2 py-2 font-extrabold rounded-md text-gray-600">
           ログアウト
         </p>
@@ -55,6 +55,7 @@ const Account = html`
 async function logout() {
   const res = await fetch("http://localhost:3000/logout",{
     method: "POST",
+    credentials: "include"
   });
 
   if (200 !== res.status) {
@@ -65,8 +66,19 @@ async function logout() {
 }
 
 
-export const registerCommonComponents = () => {
+export const registerCommonComponents = async () => {
   renderComponent(Header, 'header');
   renderComponent(Footer, 'footer');
-  renderComponent(Account, 'account');
+
+  const sessioncheckRes = await fetch("http://localhost:3000/sessioncheck",{
+    method: "POST",
+    credentials: "include"
+  });
+
+  const sessioncheckResJson = await sessioncheckRes.json();
+  
+  if (sessioncheckResJson.isLoggedIn) {
+    // Cookieがある場合はアカウントコンポーネントを表示    
+    renderComponent(Account, 'account');
+  }
 };
