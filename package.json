@@ -1,13 +1,13 @@
 {
   "scripts": {
+    "build": "webpack build",
     "dev": "webpack serve",
-    "build": "webpack"
+    "serve": "node server.js"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "css-loader": "^7.1.2",
     "html-loader": "^5.1.0",
-    "html-webpack-plugin": "^5.6.3",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8.4.49",
     "postcss-loader": "^8.1.1",
@@ -15,6 +15,14 @@
     "tailwindcss": "^3.4.15",
     "webpack": "^5.97.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
+    "webpack-dev-middleware": "^7.4.2",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-hot-middleware": "^2.26.1"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.1",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "lit-html": "^3.2.1"
   }
 }

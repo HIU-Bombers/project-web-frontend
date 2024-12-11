@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ログイン | HIU食堂 Web食券販売</title>
+</head>
+<body class="bg-gray-100 flex flex-col justify-between h-dvh font-sans">
+  <header id="header"></header>
+  <main class="h-lvh flex flex-col justify-start">
+    <section class="bg-white rounded-xl h-fit m-12 p-3 shadow-md">
+      <h2 class="text-xl font-extrabold mx-auto mt-3 w-fit text-gray-700">ログイン</h2>
+      
+      <form onsubmit="onSubmit(event)" class="w-fit mx-auto mt-4 flex flex-col justify-between h-64">
+        <sectoin class="flex flex-col justify-around space-y-2">
+          <div>
+            <label for="email" class="text-sm text-gray-600">メールアドレス</label>
+            <br>
+            <input name="email" required type="email" class="bg-gray-100 shadow-md rounded-md">
+          </div>
+          <div>
+            <label for="password" class="text-sm text-gray-600">パスワード</label>
+            <br>
+            <input name="password" required type="password" class="bg-gray-100 shadow-md rounded-md">  
+          </div>
+        </sectoin>
+        <section class="mx-auto mt-8">
+          <button type="submit" class="bg-sky-700 text-white font-bold py-2 px-8 rounded-md drop-shadow-md hover:bg-sky-800">
+            ログイン
+          </button>
+        </section>
+        <section>
+          <a href="/signup" class="w-fit text-xs text-blue-700 underline hover:text-blue-500">アカウントをお持ちでないかたはこちら</a>
+        </section>
+      </form>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+  
+  <script type="module" src="/dist/bundle.js"></script>
+  <script>      
+    async function onSubmit(event) {
+      event.preventDefault()
+
+      const form = new FormData(event.target);
+      const email = form.get("email");
+      const password = form.get("password");
+
+      try {
+        await postSignin(email, password);
+
+      } catch (err) {
+        return;
+      }
+      window.location = '/home';
+    }
+
+    async function postSignin(email, password) {
+      const res = await fetch("http://localhost:9000/signin",{
+        method: "POST",
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          'email': email,
+          'password': password
+        })
+      });
+
+      if (200 !== res.status) {
+        const errJson = await res.json();
+        const errCode = errJson.error_code;
+        const reason = errJson.reason;
+
+        console.error(reason ?? "empty error reason");
+        return;
+      }
+    }
+  </script>
+</body>
+</html>
