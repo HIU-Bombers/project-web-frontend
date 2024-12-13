@@ -2,7 +2,7 @@
   "scripts": {
     "build": "webpack build",
     "dev": "webpack serve",
-    "serve": "node server.js"
+    "serve": "node server/launch.js"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
