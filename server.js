@@ -1,10 +1,15 @@
-const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const app = express();
 
 function getSessionId(req) {
   return req.cookies.PROJECT_BASICS__SESSION_ID ?? null;
+}
+
+function getBearerHeader(req) {
+  return {
+    'Authorization': `Bearer ${getSessionId(req)}`
+  };
 }
 
 function requireLogin(req, res, next) {
@@ -42,23 +47,20 @@ app.use('/', express.static('views'));
 
 // api
 app.post('/logout', async (req, res) => {
-  res.clearCookie('PROJECT_BASICS__SESSION_ID');
+  const signoutRes = await fetch("http://localhost:9000/signout",{
+    method: "POST",
+    credentials: 'include',
+    headers: getBearerHeader(req)
+  });
   
-  // const signoutRes = await fetch("http://localhost:9000/signout",{
-  //   method: "POST",
-  //   mode: 'cors',
-  //   credentials: 'include',
-  // });
-  
-  // console.log(signoutRes.status);
-  // console.log(signoutRes.headers);
-  // console.log(signoutRes.body);
-  // console.log((await signoutRes.text()));
+  console.log(signoutRes.status);
 
-  // if (200 !== signoutRes.status) {
-  //   res.sendStatus(signoutRes.status);
-  //   return;
-  // }
+  if (200 !== signoutRes.status) {
+    res.sendStatus(signoutRes.status);
+    return;
+  }
+
+  res.clearCookie('PROJECT_BASICS__SESSION_ID');
   res.sendStatus(200);
 });
 
