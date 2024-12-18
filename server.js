@@ -26,6 +26,12 @@ function requireLogout(req, res, next) {
   next();
 }
 
+function getBearerHeader(req) {
+  return {
+    'Authorization': `Bearer ${getSessionId(req)}`
+  };
+}
+
 app.use(cookieParser());
 
 // middleware
@@ -67,6 +73,21 @@ app.post('/sessioncheck', async (req, res) => {
   res.json({
     "isLoggedIn": null !== getSessionId(req)
   })
+});
+
+app.post('/use-ticket/:token', async (req, res) => {
+  let token = req.params.token;
+
+  let response = await fetch('http://localhost:9000/meal-tickets/me/use', {
+    method: "POST",
+    mode: "cors",
+    headers: getBearerHeader(req),
+    body: JSON.stringify({
+      token
+    })
+  });
+
+  res.json(await response.json());
 });
 
 app.get('/qrcode-gen/:token', async (req, res) => {
