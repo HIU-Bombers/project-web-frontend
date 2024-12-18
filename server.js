@@ -76,9 +76,9 @@ app.post('/sessioncheck', async (req, res) => {
 });
 
 app.post('/use-ticket/:token', async (req, res) => {
-  let token = req.params.token;
+  const token = req.params.token;
 
-  let response = await fetch('http://localhost:9000/meal-tickets/me/use', {
+  const response = await fetch('http://localhost:9000/meal-tickets/me/use', {
     method: "POST",
     mode: "cors",
     headers: getBearerHeader(req),
@@ -91,9 +91,9 @@ app.post('/use-ticket/:token', async (req, res) => {
 });
 
 app.get('/qrcode-gen/:token', async (req, res) => {
-  let token = req.params.token;
+  const token = req.params.token;
 
-  let QRbase64 = await new Promise((resolve, reject) => {
+  const QRbase64 = await new Promise((resolve, reject) => {
     QRCode.toDataURL(`http://localhost:3000/use-ticket/${token}`, function (err, code) {
       if (err) {
         reject(reject);
