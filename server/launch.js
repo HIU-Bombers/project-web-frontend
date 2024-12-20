@@ -1,5 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const QRCode = require('qrcode');
 const app = express();
 
 function getSessionId(req) {
@@ -13,7 +14,7 @@ function getBearerHeader(req) {
 }
 
 function requireLogin(req, res, next) {
-  if (null === getSessionId(req)) {    
+  if (null === getSessionId(req)) {
     res.redirect('/login');
     return;
   }
@@ -28,6 +29,12 @@ function requireLogout(req, res, next) {
   }
 
   next();
+}
+
+function getBearerHeader(req) {
+  return {
+    'Authorization': `Bearer ${getSessionId(req)}`
+  };
 }
 
 app.use(cookieParser());
@@ -47,13 +54,18 @@ app.use('/', express.static('views'));
 
 // api
 app.post('/logout', async (req, res) => {
-  const signoutRes = await fetch("http://localhost:9000/signout",{
-    method: "POST",
-    credentials: 'include',
-    headers: getBearerHeader(req)
-  });
-  
-  console.log(signoutRes.status);
+  res.clearCookie('PROJECT_BASICS__SESSION_ID');
+
+  // const signoutRes = await fetch("http://localhost:9000/signout",{
+  //   method: "POST",
+  //   mode: 'cors',
+  //   credentials: 'include',
+  // });
+
+  // console.log(signoutRes.status);
+  // console.log(signoutRes.headers);
+  // console.log(signoutRes.body);
+  // console.log((await signoutRes.text()));
 
   if (200 !== signoutRes.status) {
     res.sendStatus(signoutRes.status);
@@ -68,6 +80,39 @@ app.post('/sessioncheck', async (req, res) => {
   res.json({
     "isLoggedIn": null !== getSessionId(req)
   })
+});
+
+app.post('/use-ticket/:token', async (req, res) => {
+  const token = req.params.token;
+
+  const response = await fetch('http://localhost:9000/meal-tickets/me/use', {
+    method: "POST",
+    mode: "cors",
+    headers: getBearerHeader(req),
+    body: JSON.stringify({
+      token
+    })
+  });
+
+  res.json(await response.json());
+});
+
+app.get('/qrcode-gen/:token', async (req, res) => {
+  const token = req.params.token;
+
+  const QRbase64 = await new Promise((resolve, reject) => {
+    QRCode.toDataURL(`http://localhost:3000/use-ticket/${token}`, function (err, code) {
+      if (err) {
+        reject(reject);
+        return;
+      }
+      resolve(code);
+    });
+  });
+
+  res.json({
+    "base64-qr-code": QRbase64
+  });
 });
 
 app.listen(3000, () => {

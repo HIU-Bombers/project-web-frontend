@@ -1,16 +1,205 @@
 <!DOCTYPE html>
-<html lang="en">
-
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HIU食堂 Web食券販売</title>
-  <script type="module" src="/dist/bundle.js"></script>
+  <title>Home | HIU食堂 Web食券販売 らく券</title>
+  <script src="/dist/bundle.js"></script>
+  <style>
+    /* ページ全体の高さを設定 */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff; /* 薄い青系の背景色 */
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ヘッダーのスタイル */
+    header {
+      background-color: #e0f0ff; /* 薄い青系 */
+      border-bottom: 2px solid #b0cfe0;
+      padding: 10px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-right: 20px;
+      color: black; /* 黒色に変更 */
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links a {
+      margin-left: 20px;
+      color: #2c3e50;
+      font-size: 1em;
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    h2 {
+      color: #2c3e50;
+    }
+
+    /* コンテンツが少ない場合でもフッターを下に配置 */
+    main {
+      flex-grow: 1;
+    }
+
+    .step-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+
+    .step {
+      flex-basis: 48%;
+      margin-bottom: 20px;
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .step img {
+      width: 100%;
+      height: auto;
+      max-width: 50%; /* 画像の幅を画面の半分に制限 */
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    /* モバイル対応 */
+    @media (max-width: 768px) {
+      .step {
+        flex-basis: 100%;
+      }
+      .step img {
+        max-width: 100%; /* モバイルでは画像が100%幅 */
+      }
+    }
+
+    /* フッターのスタイル */
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: auto; /* フッターをページの下部に固定 */
+    }
+
+  </style>
 </head>
-<body class="bg-gray-100 text-center">
-  <h1 class="text-4xl text-blue-500 font-bold mt-10">
-    HIU食堂 食券販売サイト
-  </h1>
+<body>
+  
+  <header class="bg-white border-b-gray-400 border-b-4">
+    <div class="container">
+      <!-- 左側の「らく券」と「Home」のリンク -->
+      <div class="header-left">
+        <div class="logo">
+          <a href="#" class="hover:text-blue-300">らく券</a>
+        </div>
+        <div class="text-2xl font-bold">
+          <a href="#" class="hover:text-blue-300">Home</a>
+        </div>
+      </div>
+
+      <!-- 右側の「アプリを開く」と「詳細」のリンク -->
+      <div class="nav-links">
+        <a href="https://app-download-link.com">アプリを開く</a>
+        <a href="menu.html">らく券について</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="bg-white rounded-xl h-auto m-3 p-3 shadow-md">
+      <h2 class="text-xl font-bold">らく券の利用方法</h2>
+      
+      <!-- ステップのコンテナ -->
+      <div class="step-container">
+
+        <!-- ステップ1 -->
+        <div class="step">
+          <img src="account.jpeg" alt="アカウント作成画面">
+          <h2>手順1: アカウント作成</h2>
+          <p>大学のメールアドレスとパスワードを入力してアカウントを作成します。</p>
+        </div>
+
+        <!-- ステップ2 -->
+        <div class="step">
+          <img src="login.jpeg" alt="ログイン画面">
+          <h2>手順2: ログイン</h2>
+          <p>先ほど入力したメールアドレスとパスワードを再度入力してログインをします。</p>
+        </div>
+
+      </div>
+
+      <div class="step-container">
+
+        <!-- ステップ3 -->
+        <div class="step">
+          <img src="menu.png" alt="メニュー選択画面">
+          <h2>手順3: メニューを選択</h2>
+          <p>お好みのメニューを選択してカートに入れます。</p>
+        </div>
+
+        <!-- ステップ4 -->
+        <div class="step">
+          <img src="Payment method.png" alt="お支払い方法選択画面">
+          <h2>手順4: カートに入れたメニューの決済とQRコードの表示</h2>
+          <p>カートに入れたメニューの決済方法を選択し、決済が完了したらQRコードが表示されるので表示されたQRコードを食堂側へ提示してください。</p>
+        </div>
+
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <div class="container mx-auto py-6 px-6">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="text-lg font-bold text-gray-600">
+          <a href="#" class="hover:text-gray-500">HIU学食 Web食券販売</a>
+        </div>
+        <nav class="mt-4 md:mt-0 flex space-x-4 text-gray-600">
+          <a href="#" class="hover:text-gray-500">プライバシー</a>
+          <a href="#" class="hover:text-gray-500">利用規約</a>
+          <a href="#" class="hover:text-gray-500">お問い合わせ</a>
+        </nav>
+      </div>
+      <div class="text-center text-sm text-gray-500 mt-6">
+        &copy; 2024 HIU Bombers. All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
