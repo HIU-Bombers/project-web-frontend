@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home | HIU食堂 Web食券販売</title>
-  <link rel="stylesheet" type="text/css" href="/dist/bundle.css">
 </head>
 <body class="bg-gray-100 flex flex-col justify-between h-dvh">
   <header id="header"></header>
@@ -14,8 +13,34 @@
       <img src="assets/use.btn.png" class="w-2/5 max-w-72 h-auto rounded-lg shadow-lg hover:brightness-[90%]">
     </section>
 
-    <section>
-      <h1 class="font-extrabold text-gray-600 text-2xl mx-10">本日の定食</h1>
+    <section class="mx-5">
+      <h1 class="font-extrabold text-gray-600 text-2xl mx-6">本日の定食</h1>
+
+      <section class="flex flex-row flex-wrap w-5/6 mx-auto gap-4 p-2">        
+        <div class="bg-white shadow-md block w-5/12 rounded-md overflow-hidden">
+          <img src="assets/test.png" class="w-full h-auto rounded-t-lg">
+          <div class="p-4">
+            <p class="font-bold text-lg">A定食</p>
+            <p class="text-gray-600">¥480</p>
+          </div>
+        </div>
+        <div class="bg-white shadow-md block w-5/12 rounded-md overflow-hidden">
+          <img src="assets/test.png" class="w-full h-auto rounded-t-lg">
+          <div class="p-4">
+            <p class="font-bold text-lg">B定食</p>
+            <p class="text-gray-600">¥480</p>
+          </div>
+        </div>
+        <div class="bg-white shadow-md block w-5/12 rounded-md overflow-hidden">
+          <img src="assets/test.png" class="w-full h-auto rounded-t-lg">
+          <div class="p-4">
+            <p class="font-bold text-lg">日替わり丼</p>
+            <p class="text-gray-600">¥480</p>
+          </div>
+        </div>
+      </section>
+
+    
     </section>
   </main>
   <nav id="menu"></nav>
