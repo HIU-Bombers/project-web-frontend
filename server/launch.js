@@ -54,25 +54,19 @@ app.use('/', express.static('views'));
 
 // api
 app.post('/logout', async (req, res) => {
-  res.clearCookie('PROJECT_BASICS__SESSION_ID');
-
-  // const signoutRes = await fetch("http://localhost:9000/signout",{
-  //   method: "POST",
-  //   mode: 'cors',
-  //   credentials: 'include',
-  // });
-
-  // console.log(signoutRes.status);
-  // console.log(signoutRes.headers);
-  // console.log(signoutRes.body);
-  // console.log((await signoutRes.text()));
+  const signoutRes = await fetch("http://localhost:9000/signout",{
+    method: "POST",
+    mode: 'cors',
+    credentials: 'include',
+    headers: getBearerHeader(req)
+  });
 
   if (200 !== signoutRes.status) {
     res.sendStatus(signoutRes.status);
     return;
   }
 
-  res.clearCookie('PROJECT_BASICS__SESSION_ID');
+  res.clearCookie('PROJECT_BASICS__SESSION_ID');  // HACK: サーバー側でcookie削除できていない
   res.sendStatus(200);
 });
 
