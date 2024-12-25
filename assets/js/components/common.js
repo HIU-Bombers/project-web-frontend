@@ -43,7 +43,7 @@ const Account = html`
       </summary>
 
       <button type="button" @click=${logout} class="z-10 flex flex-row origin-top-right absolute right-0 mt-2 mx-auto w-28 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hover:bg-gray-100">
-        <p class="z-10 x-block w-fit text-left mx-2 py-2 font-extrabold rounded-md text-gray-600">
+        <p class="z-50 x-block w-fit text-left mx-2 py-2 font-extrabold rounded-md text-gray-600">
           ログアウト
         </p>
         <img src="/assets/imgs/logout.png" class="h-6 w-auto my-auto" alt="Logout">

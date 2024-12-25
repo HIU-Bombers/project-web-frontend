@@ -5,12 +5,12 @@ const MenuBar = html`
   <div class="w-full h-20 border-t-2 border-gray-300 p-2">
       <ul class="flex flex-row justify-around">
       <li>
-        <a href="#">
+        <a href="/home">
           <img src="/assets/imgs/menu/home.png" class="w-10 h-auto">
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="/menu">
           <img src="/assets/imgs/menu/food.png" class="w-10 h-auto">
         </a>
       </li>
