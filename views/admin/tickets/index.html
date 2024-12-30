@@ -157,7 +157,7 @@
         const tr = document.createElement('tr');
         tr.className = 'border-b hover:bg-gray-50';
         tr.dataset.ticketId = ticket.id;      // 取り扱いID
-        tr.dataset.mealId   = ticket.mealId;  // 必須(裏で送信)
+        tr.dataset.mealId   = ticket.meal.id;  // 必須(裏で送信)
         
         // メニュー名
         const tdName = document.createElement('td');
@@ -177,7 +177,7 @@
         const tdStocks = document.createElement('td');
         tdStocks.className = 'py-2 px-3 text-sm';
         tdStocks.contentEditable = true;
-        tdStocks.textContent = ticket.available_stocks ?? 0;
+        tdStocks.textContent = ticket.available_stocks_per_day ?? 0;
         tr.appendChild(tdStocks);
 
         // 販売日
@@ -214,21 +214,21 @@
       });
     }
 
-    async function handleUpdate(tr, tdName, tdPrice, tdStocks, tdSalesAt) {
-      const mealId = tr.dataset.mealId; 
+    async function handleUpdate(tr, tdName, tdPrice, tdStocks, tdSalesAt) {      
+      const ticketId = tr.dataset.ticketId; 
       const newPrice  = parseInt(tdPrice.textContent.trim(), 10) || 0;
       const newStocks = parseInt(tdStocks.textContent.trim(), 10) || 0;
       const newSalesAt = tdSalesAt.textContent.trim() || null;
 
       const payload = {
-        mealId: mealId,
+        // ticketId: ticketId,
         price: newPrice,
         available_stocks: newStocks,
         sales_at: newSalesAt,
       };
 
       try {
-        const url = 'http://localhost:3000/meal-tickets';
+        const url = `http://localhost:3000/meal-tickets/${ticketId}`;
         const res = await fetch(url, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },

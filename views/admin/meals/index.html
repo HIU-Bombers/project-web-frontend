@@ -100,12 +100,12 @@
             required
           >
             <option value="" disabled selected>選択してください</option>
-            <option value="SET">日替わり (SET)</option>
-            <option value="CURRY">カレーライス (CURRY)</option>
-            <option value="RAMEN">ラーメン (RAMEN)</option>
-            <option value="UDON">うどん (UDON)</option>
-            <option value="SOBA">そば (SOBA)</option>
-            <option value="OTHER">その他 (OTHER)</option>
+            <option value="DAILY">日替わり</option>
+            <option value="CURRY">カレーライス</option>
+            <option value="RAMEN">ラーメン</option>
+            <option value="UDON">うどん</option>
+            <option value="SOBA">そば</option>
+            <option value="OTHER">その他</option>
           </select>
         </div>
 
@@ -118,6 +118,7 @@
             class="block w-full p-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             accept="image/*"
             capture="environment"
+            onchange="onFileChange(event)"
           />
         </div>
 
@@ -240,12 +241,12 @@
 
         // 種類の候補
         const kindOptions = [
-          { value: 'SET',   label: '日替わり (SET)' },
-          { value: 'CURRY', label: 'カレーライス (CURRY)' },
-          { value: 'RAMEN', label: 'ラーメン (RAMEN)' },
-          { value: 'UDON',  label: 'うどん (UDON)' },
-          { value: 'SOBA',  label: 'そば (SOBA)' },
-          { value: 'OTHER', label: 'その他 (OTHER)' },
+          { value: 'DAILY',   label: '日替わり' },
+          { value: 'CURRY', label: 'カレーライス' },
+          { value: 'RAMEN', label: 'ラーメン' },
+          { value: 'UDON',  label: 'うどん' },
+          { value: 'SOBA',  label: 'そば' },
+          { value: 'OTHER', label: 'その他' },
         ];
 
         // 選択肢を追加
@@ -322,9 +323,12 @@
 
       const payload = {
         name: newName,
-        description: newDesc,
         kind: newKind,
       };
+
+      if (newDesc !== '') {
+        payload['description'] = newDesc;
+      }
 
       const url = `http://localhost:3000/meals/${mealId}`;
       try {
@@ -422,13 +426,14 @@
 
     replaceForm.addEventListener('submit', async (ev) => {
       ev.preventDefault();
+  
       if (!currentMealId) return;
       if (!newImageBase64) {
         alert('画像が選択されていません');
         return;
       }
 
-      const payload = { meal_image: newImageBase64 };
+      const payload = { meal_image: newImageBase64.replace('data:image/png;base64,', '') };
       const url = `http://localhost:3000/meals/${currentMealId}`;
 
       try {
@@ -512,7 +517,7 @@
       }
 
       try {
-        const res = await fetch('http://localhost:3000/meals', {
+        const res = await fetch(`http://localhost:3000/meals`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),

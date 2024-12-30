@@ -22,11 +22,16 @@
     "webpack-hot-middleware": "^2.26.1"
   },
   "dependencies": {
+    "@node-escpos/core": "^0.6.0",
+    "@node-escpos/usb-adapter": "^0.3.1",
     "chokidar": "^4.0.1",
     "cookie-parser": "^1.4.7",
+    "escpos": "^3.0.0-alpha.6",
+    "escpos-usb": "^3.0.0-alpha.4",
     "express": "^4.21.2",
     "lit-html": "^3.2.1",
     "nodemon": "^3.1.9",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "usb": "^2.14.0"
   }
 }

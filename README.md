@@ -90,3 +90,10 @@ $ git commit -m "{「hogeの実装」のような作業メッセージ}"
 # GitHubに変更履歴をアップロードする
 $ git push origin HEAD
 ```
+
+
+## USBの同期
+
+```bash
+$ usbipd attach --wsl --busid 2-2
+```

@@ -8,7 +8,7 @@
 <body class="bg-gray-100 flex flex-col justify-between h-dvh">
   <header id="header"></header>
   <main class="h-lvh flex flex-col justify-start space-y-7 overflow-x-auto">
-    <nav class="sticky top-0 bg-blue-700 text-white z-40 shadow-md opacity-80">
+    <nav class="sticky top-0 bg-blue-700 text-white shadow-md opacity-80 z-10">
       <ul class="flex divide-x divide-white">
         <li class="flex-1 text-center py-2 hover:bg-blue-800 cursor-pointer">
           <a href="#category1">日替わり</a>
@@ -27,7 +27,7 @@
 
     <form class="mx-5" onsubmit="onSubmit(event)">
       <h2 id="category1" class="font-extrabold text-gray-600 text-2xl mx-6">日替わり</h2>
-      <section id="set-box" class="flex flex-row flex-wrap w-5/6 mx-auto gap-4 p-2"> 
+      <section id="daily-box" class="flex flex-row flex-wrap w-5/6 mx-auto gap-4 p-2"> 
       </section>
   
       <h2 id="category2" class="font-extrabold text-gray-600 text-2xl mx-6">カレーライス</h2>
@@ -50,8 +50,8 @@
       </section>
 
       <div class="sticky bottom-9 left-[calc(100vw_-_15vw)] w-fit">
-        <button type="submit" class="w-16 h-16 bg-white shadow-md rounded-full border-blue-300 border-2">
-          <img src="assets/buy.png" class="w-10 h-auto m-3 ml-2">
+        <button type="submit" class="w-24 h-24 bg-blue-600 shadow-md rounded-full border-blue-300 border-2">
+          <img src="assets/buy.png" class="w-24 h-auto">
         </button>
       </div>
     </form>
@@ -91,7 +91,7 @@
     fetch('http://localhost:3000/meal-tickets')
     .then((res) => res.json())
     .then((tickets) => {
-      // ① 今日の「日付のみ」を取得（時刻を00:00にする）
+      // ① 今日の「日付のみ」を取得（時刻を00:00にする）      
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -102,8 +102,8 @@
         // 在庫数
         const stock = ticket.available_stocks; 
 
-        // 今日以降 & 在庫 >= 1
-        return (salesDate >= today) && (stock >= 1);
+        // 今日 & 在庫 >= 1
+        return (salesDate.toDateString() === today.toDateString()) && (stock >= 1);
       });
 
       // ③ kind ごとにまとめる
@@ -124,7 +124,7 @@
 
       // 表示先マップ
       const boxMap = {
-        SET: 'set-box',
+        DAILY: 'daily-box',
         CURRY: 'curry-box',
         RAMEN: 'ramen-box',
         UDON: 'udon-box',
@@ -140,7 +140,7 @@
         mealsArr.forEach((m) => {
           const mealCard = `
             <label id="meal-${m.id}"
-              class="relative block w-5/12 rounded-md overflow-hidden transition-all duration-200 
+              class="relative block w-5/12 rounded-md overflow-hidden transition-all duration-200
                     bg-gray-50 ring-1 ring-gray-300 hover:bg-gray-100 hover:ring-2 hover:ring-slate-300 
                     cursor-pointer peer-checked:bg-green-50 peer-checked:ring-green-600 peer-checked:ring-2"
               title="クリックで選択/解除できます" aria-label="クリックでメニューを選択">
@@ -165,7 +165,7 @@
                   ? `<img src="http://localhost:9000/${m.mealImage}" class="w-full h-auto rounded-t-md">`
                   : ""
               }
-              <div class="p-4">
+              <div class="p-4 peer-checked:bg-gray-200">
                 <p class="font-bold text-lg text-gray-900">${m.name}</p>
                 <p class="text-gray-600">¥${m.price}</p>
               </div>
@@ -177,7 +177,7 @@
     })
     .catch((err) => {
       console.error('エラー:', err);
-    });
+    });    
 
     const confirmModal = document.getElementById('confirmModal');
     const confirmText = document.getElementById('confirmText');
@@ -196,7 +196,7 @@
 
       // 配列を組み立て (amount は常に 1)
       purchaseTickets = Array.from(checkedBoxes).map((box) => ({
-        ticketId: box.value,
+        meal_ticket_id: box.value,
         amount: 1,  // 常に 1
       }));
 
@@ -215,8 +215,23 @@
       confirmModal.classList.remove('flex');
     }
 
-    function executePurchase() {
-      console.log(purchaseTickets);
+    async function executePurchase() {
+      const res = await fetch('http://localhost:3000/meal-tickets/buy', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(purchaseTickets),
+      });
+
+      if (res.ok) {
+        alert("購入に成功しました");
+
+      } else {
+        alert("購入に失敗しました");
+      }
+
+      window.location = "/menu";
     }
 
   </script>

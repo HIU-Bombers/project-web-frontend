@@ -4,7 +4,9 @@
     "workspaceFolder": "/project-web-frontend",
     "remoteUser": "root",
     "initializeCommand": "bash .devcontainer/HIU-FW.sh",
-    "features": {},
+    "features": {
+      "ghcr.io/devcontainers/features/docker-outside-of-docker":{}
+    },
     "customizations": {
         "vscode": {
             "extensions": [

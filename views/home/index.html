@@ -7,42 +7,19 @@
 </head>
 <body class="bg-gray-100 flex flex-col justify-between h-dvh">
   <header id="header"></header>
-  <main class="h-lvh flex flex-col justify-start space-y-7">
-    <section class="flex flex-row justify-around mx-2 mt-3 max-w-4xl">
-      <a href="/menu" class="w-2/5 max-w-72 h-auto shadow-lg">
+  <main class="h-lvh flex flex-row flex-wrap justify-start space-y-7">
+    <section class="flex flex-row justify-around mx-auto mt-3 max-w-4xl">
+      <a href="/menu" class="w-2/5 max-w-72 h-2/5 max-h-72 shadow-lg">
         <img src="assets/buy.btn.png" class="rounded-lg hover:brightness-[90%]">
       </a>
-      <img src="assets/use.btn.png" class="w-2/5 max-w-72 h-auto rounded-lg shadow-lg hover:brightness-[90%]">
+      <a href="/use" class="w-2/5 max-w-72 h-2/5 max-h-72 shadow-lg">
+        <img src="assets/use.btn.png" class="rounded-lg hover:brightness-[90%]">
+      </a>
     </section>
 
     <section class="mx-5">
       <h1 class="font-extrabold text-gray-600 text-2xl mx-6">本日の定食</h1>
-
-      <section class="flex flex-row flex-wrap w-5/6 mx-auto gap-4 p-2">        
-        <div class="bg-white shadow-md block w-5/12 rounded-md overflow-hidden">
-          <img src="assets/test.png" class="w-full h-auto rounded-t-lg">
-          <div class="p-4">
-            <p class="font-bold text-lg">A定食</p>
-            <p class="text-gray-600">¥480</p>
-          </div>
-        </div>
-        <div class="bg-white shadow-md block w-5/12 rounded-md overflow-hidden">
-          <img src="assets/test.png" class="w-full h-auto rounded-t-lg">
-          <div class="p-4">
-            <p class="font-bold text-lg">B定食</p>
-            <p class="text-gray-600">¥480</p>
-          </div>
-        </div>
-        <div class="bg-white shadow-md block w-5/12 rounded-md overflow-hidden">
-          <img src="assets/test.png" class="w-full h-auto rounded-t-lg">
-          <div class="p-4">
-            <p class="font-bold text-lg">日替わり丼</p>
-            <p class="text-gray-600">¥480</p>
-          </div>
-        </div>
-      </section>
-
-    
+      <section id="daily-menu-container" class="flex flex-row flex-start flex-wrap justify-start mx-auto gap-4 p-2 w-10/12"></section>
     </section>
   </main>
   <nav id="menu"></nav>
@@ -50,6 +27,71 @@
 
   <script type="module" src="/dist/bundle.js"></script>
   <script>
+    fetch('http://localhost:3000/meal-tickets')
+    .then((res) => res.json())
+    .then((tickets) => {
+      // ① 今日の「日付のみ」を取得（時刻を00:00にする）      
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      // ② フィルタ：今日以降 & 在庫数が1以上
+      const filteredTickets = tickets.filter((ticket) => {
+        // sales_at を Date に変換
+        const salesDate = new Date(ticket.sales_at); 
+        // 在庫数
+        const stock = ticket.available_stocks; 
+
+        // 今日 & 在庫 >= 1
+        return (salesDate.toDateString() === today.toDateString()) && (stock >= 1);
+      });
+
+      // ③ kind ごとにまとめる
+      const groupedMeals = filteredTickets.reduce((acc, item) => {
+        // 必要情報を取り出し
+        const kind = item.meal.kind;
+        const id = item.id; 
+        const name = item.meal.name;
+        const mealImage = item.meal.meal_image;
+        const price = item.price;
+
+        if (!acc[kind]) {
+          acc[kind] = [];
+        }
+        acc[kind].push({ id, name, mealImage, price });
+        return acc;
+      }, {});
+      const boxEl = document.getElementById("daily-menu-container");
+
+      for (const [kind, mealsArr] of Object.entries(groupedMeals)) {
+        if (kind !== "DAILY") {
+          continue;
+        }
+
+        mealsArr.forEach((m) => {
+          const mealCard = `
+            <div id="meal-${m.id}"
+              class="relative block w-5/12 rounded-md overflow-hidden transition-all duration-200 
+                    bg-gray-50 ring-1 ring-gray-300 hover:bg-gray-100 hover:ring-2 hover:ring-slate-300 
+                    cursor-pointer peer-checked:bg-green-50 peer-checked:ring-green-600 peer-checked:ring-2">
+
+              ${
+                m.mealImage
+                  ? `<img src="http://localhost:9000/${m.mealImage}" class="w-full h-auto rounded-t-md">`
+                  : ""
+              }
+              <div class="p-4 peer-checked:bg-gray-200">
+                <p class="font-bold text-lg text-gray-900">${m.name}</p>
+                <p class="text-gray-600">¥${m.price}</p>
+              </div>
+            </label>
+          `;
+          boxEl.innerHTML += mealCard;
+        });
+      }
+    })
+    .catch((err) => {
+      console.error('エラー:', err);
+    });  
   </script>
 </body>
 </html>

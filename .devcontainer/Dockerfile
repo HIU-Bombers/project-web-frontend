@@ -8,7 +8,8 @@ RUN apt update -qy && \
         openssl \
         locales \
         vim \
-        xdg-utils
+        xdg-utils \
+        usbutils
 
 # 情報大Wi-Fiの証明書インポート
 COPY singed_HIU-FW.crt /usr/local/share/ca-certificates/HIU-FW.crt

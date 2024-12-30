@@ -15,7 +15,7 @@ const MenuBar = html`
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href="/use">
           <img src="/assets/imgs/menu/qr.png" class="w-10 h-auto">
         </a>
       </li>
