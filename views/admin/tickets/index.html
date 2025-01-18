@@ -5,14 +5,11 @@
   <title>食券管理画面 | HIU食堂 Web食券販売</title>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
-  <!-- ヘッダー -->
   <header id="header"></header>
 
-  <!-- メインコンテンツ -->
   <main class="flex-grow container mx-auto p-4 overflow-auto relative">
     <h1 class="text-2xl font-bold mb-6 text-gray-700">食券管理画面</h1>
 
-    <!-- 食券一覧テーブル -->
     <table class="min-w-full bg-white rounded shadow">
       <thead class="bg-gray-200 text-gray-700">
         <tr>
@@ -26,33 +23,28 @@
       <tbody id="ticketsBody"></tbody>
     </table>
 
-    <!-- プラスボタン (右下などに固定したければ position: sticky / absolute などを使ってもOK) -->
     <button
       id="showModalBtn"
       class="flex items-center justify-center w-12 h-12 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700
              absolute bottom-4 right-4"
       title="新規チケットを追加"
     >
-      <!-- プラスアイコン (Heroicons etc.) -->
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
     </button>
   </main>
 
-  <!-- フッター -->
   <footer id="footer"></footer>
 
-  <!-- ===== モーダル (初期非表示) ===== -->
+  <!-- モーダル (初期非表示) -->
   <div
     id="ticketModal"
     class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-50 z-50"
   >
-    <!-- モーダル内部 -->
     <div class="bg-white w-11/12 max-w-md rounded p-6 shadow-md relative">
       <h2 class="text-xl font-bold mb-4 text-center">新しい食券を発行</h2>
       
-      <!-- 閉じるボタン (右上) -->
       <button
         type="button"
         class="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
@@ -66,7 +58,6 @@
         </svg>
       </button>
 
-      <!-- 新規登録フォーム -->
       <form id="ticket-form" class="space-y-4 mt-4">
         <!-- メニュー選択 -->
         <div>
@@ -137,7 +128,7 @@
 
     async function fetchTickets() {
       try {
-        const res = await fetch('http://localhost:3000/meal-tickets');
+        const res = await fetch('http://localhost/meal-tickets');
         if (!res.ok) {
           throw new Error(`Fetch error (status: ${res.status})`);
         }
@@ -228,7 +219,7 @@
       };
 
       try {
-        const url = `http://localhost:3000/meal-tickets/${ticketId}`;
+        const url = `http://localhost/meal-tickets/${ticketId}`;
         const res = await fetch(url, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -251,7 +242,7 @@
       if (!confirm('本当に削除しますか？')) return;
 
       const ticketId = tr.dataset.ticketId;
-      const url = `http://localhost:3000/meal-tickets/${ticketId}`;
+      const url = `http://localhost/meal-tickets/${ticketId}`;
 
       try {
         const res = await fetch(url, { method: 'DELETE' });
@@ -307,7 +298,7 @@
       };
 
       try {
-        const response = await fetch('http://localhost:3000/meal-tickets', {
+        const response = await fetch('http://localhost/meal-tickets', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -333,7 +324,7 @@
     // /meals を取得して <select> に追加
     async function fetchMeals() {
       try {
-        const res = await fetch('http://localhost:3000/meals');
+        const res = await fetch('http://localhost/meals');
         if (!res.ok) {
           throw new Error(`Meals fetch error: ${res.status}`);
         }

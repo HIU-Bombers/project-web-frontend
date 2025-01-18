@@ -7,7 +7,7 @@
 </head>
 <body class="bg-gray-100 flex flex-col justify-between h-dvh">
   <header id="header"></header>
-  <main class="h-lvh flex flex-row flex-wrap justify-start space-y-7">
+  <main class="h-lvh flex flex-row flex-wrap justify-start space-y-7 max-w-screen-md mx-auto">
     <section class="flex flex-row justify-around mx-auto mt-3 max-w-4xl">
       <a href="/menu" class="w-2/5 max-w-72 h-2/5 max-h-72 shadow-lg">
         <img src="assets/buy.btn.png" class="rounded-lg hover:brightness-[90%]">
@@ -19,7 +19,7 @@
 
     <section class="mx-5">
       <h1 class="font-extrabold text-gray-600 text-2xl mx-6">本日の定食</h1>
-      <section id="daily-menu-container" class="flex flex-row flex-start flex-wrap justify-start mx-auto gap-4 p-2 w-10/12"></section>
+      <section id="daily-menu-container" class="flex flex-row flex-start flex-wrap mx-20 justify-start gap-4 p-2 w-11/12"></section>
     </section>
   </main>
   <nav id="menu"></nav>
@@ -27,14 +27,12 @@
 
   <script type="module" src="/dist/bundle.js"></script>
   <script>
-    fetch('http://localhost:3000/meal-tickets')
+    fetch('http://localhost/meal-tickets')
     .then((res) => res.json())
     .then((tickets) => {
-      // ① 今日の「日付のみ」を取得（時刻を00:00にする）      
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-      // ② フィルタ：今日以降 & 在庫数が1以上
       const filteredTickets = tickets.filter((ticket) => {
         // sales_at を Date に変換
         const salesDate = new Date(ticket.sales_at); 
@@ -45,7 +43,6 @@
         return (salesDate.toDateString() === today.toDateString()) && (stock >= 1);
       });
 
-      // ③ kind ごとにまとめる
       const groupedMeals = filteredTickets.reduce((acc, item) => {
         // 必要情報を取り出し
         const kind = item.meal.kind;

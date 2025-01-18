@@ -7,7 +7,9 @@ const { printTicket } = require('./print');
 const app = express();
 
 function getSessionId(req) {
-  return req.cookies.PROJECT_BASICS__SESSION_ID ?? null;
+  console.log(req.cookies?.PROJECT_BASICS__SESSION_ID ?? "none cookie");
+  
+  return req.cookies?.PROJECT_BASICS__SESSION_ID ?? null;
 }
 
 function requireLogin(req, res, next) {
@@ -28,9 +30,42 @@ function requireLogout(req, res, next) {
   next();
 }
 
+async function requireAdmin(req, res, next) {
+  const checkRes = await fetch('http://localhost:9000/meal-tickets/497f6eca-6276-4993-bfeb-53cbbbba6f08', {
+    method: "GET",
+    headers: {
+      'Authorization': `Bearer ${getSessionId(req)}`
+    },
+  });
+
+  if (checkRes.status !== 404) {
+    res.redirect('/home');
+    return;
+  }
+
+  next();
+}
+
+app.post('/sessioncheck', async (req, res) => {
+  res.json({
+    "isLoggedIn": Boolean(req.headers.cookie)
+  })
+});
+
 app.use(cookieParser());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+app.use(async (err, req, res, next) => {
+  console.error(err.stack);
+
+  await fetch("http://localhost/logout",{
+    method: "POST",
+    credentials: "include"
+  });
+
+  res.redirect('/home');
+});
 
 // require login
 app.use('/home', requireLogin, express.static('views/home'));
@@ -38,6 +73,9 @@ app.use('/home', requireLogin, express.static('views/home'));
 // // require logout
 app.use('/login', requireLogout, express.static('views/login'));
 app.use('/signup', requireLogout, express.static('views/signup'));
+
+app.use('/admin/tickets', requireAdmin, express.static('views/admin/tickets'));
+app.use('/admin/meals', requireAdmin, express.static('views/admin/meals'));
 
 // serve static files
 app.use('/dist', express.static('dist'));
@@ -52,20 +90,8 @@ app.get('/test', async (req, res) => {
   res.json({a: getSessionId(req)});
 });
 
-app.get('/check-admin', async (req, res) => {
-  const checkRes = await fetch('http://localhost:9000/meal-tickets/497f6eca-6276-4993-bfeb-53cbbbba6f08', {
-    method: "GET",
-    headers: {
-      'Authorization': `Bearer ${getSessionId(req)}`
-    },
-  });
-
-  res.json({isAdmin: checkRes.status === 404});
-});
-
-
 app.get('/seed', async (req, res) => {
-  await seeder.postMealMasterData(getSessionId(req));
+  await seeder.seedMealsMaster(getSessionId(req));
   res.sendStatus(200);
 })
 
@@ -77,11 +103,22 @@ app.get('/meals', async (req, res) => {
     headers: {
       'Authorization': `Bearer ${getSessionId(req)}`
     }
-  });  
+  });
 
   res.json(await mealsRes.json());
 });
 
+app.delete('/meals/:mealId', async (req, res) => {
+  const mealsRes = await fetch(`http://localhost:9000/meals/${req.params.mealId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      'Authorization': `Bearer ${getSessionId(req)}`
+    }
+  });  
+
+  res.sendStatus(mealsRes.status);
+});
 
 app.post('/meals', async (req, res) => {
   const mealsRes = await fetch('http://localhost:9000/meals', {
@@ -255,12 +292,6 @@ app.post('/logout', async (req, res) => {
   res.sendStatus(200);
 });
 
-app.post('/sessioncheck', async (req, res) => {
-  res.json({
-    "isLoggedIn": null !== getSessionId(req)
-  })
-});
-
 app.post('/use-ticket', async (req, res) => {
   const tokenRes = await fetch('http://localhost:9000/meal-tickets/me', {
     method: "POST",
@@ -282,7 +313,7 @@ app.post('/use-ticket', async (req, res) => {
   console.log("使用トークン", token);
   
   const b64qr = await new Promise((resolve, reject) => {
-    QRCode.toDataURL(`http://localhost:3000/use-ticket/${token}`, function (err, code) {
+    QRCode.toDataURL(`http://localhost/use-ticket/${token}`, function (err, code) {
       if (err) {
         reject(reject);
         return;
@@ -313,13 +344,19 @@ app.get('/use-ticket/:token', async (req, res) => {
   });
 
   const useResJson = await useRes.json();
-
+  console.log(useResJson);
+  
   try {
-    printTicket(new Date().toDateString(), "テスト定食", useResJson.price ?? "ERR");
+
+    useResJson.forEach(ticket => {
+      printTicket(new Date().toLocaleDateString('ja-JP'), ticket.meal.name ?? "ERR", ticket.price ?? "470");
+    });
 
   } catch (e) {
     console.log("印刷に失敗しました");
     console.log(e);
+    res.sendStatus(400);
+    return;
   }
 
   res.json(useResJson);
@@ -346,6 +383,6 @@ app.delete('/use-ticket/:token', async (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(80, () => {
+  console.log('Server is running on port 80');
 });

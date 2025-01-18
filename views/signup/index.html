@@ -2,17 +2,24 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>サインアップ | HIU食堂 Web食券販売</title>
+  <style>
+    #error-message {
+      display: none;
+    }
+    #error-message.active {
+      display: block;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 flex flex-col justify-between h-dvh font-sans">
   <header id="header"></header>
   <main class="h-lvh flex flex-col justify-start">
     <section class="bg-white rounded-xl h-fit m-12 p-3 shadow-md">
       <h2 class="text-xl font-extrabold mx-auto mt-3 w-fit text-gray-700">アカウントを作成</h2>
-
-      <form onsubmit="onSubmit(event)" class="w-fit mx-auto mt-4 flex flex-col justify-between h-64">
-        <sectoin class="flex flex-col justify-around space-y-2">
+      <form onsubmit="onSubmit(event)" class="w-fit mx-auto mt-4 flex flex-col justify-between min-h-64 h-fit">
+        <section class="flex flex-col justify-around space-y-2">
           <div>
             <label for="email" class="text-sm text-gray-600">メールアドレス</label>
             <br>
@@ -28,7 +35,8 @@
             <br>
             <input name="confirm-password" type="password" required class="bg-gray-100 shadow-md rounded-md">
           </div>
-        </sectoin>
+        </section>
+        <p id="error-message" class="text-red-600 mt-2 ml-1"></p>
         <section class="mx-auto mt-8">
           <button type="submit" class="bg-sky-700 text-white font-bold py-2 px-8 rounded-md drop-shadow-md hover:bg-sky-800">
             次に進む
@@ -41,64 +49,50 @@
     </section>
   </main>
   <footer id="footer"></footer>
-
   <script type="module" src="/dist/bundle.js"></script>
   <script>
-    async function onSubmit(event) {
-      event.preventDefault()
+    class PasswordConfirmError extends Error {}
+    class PassworLengthError extends Error {}
 
-      const form = new FormData(event.target);
-      const email = form.get("email");
-      const password = form.get("password");
-      const confirmPassword = form.get("confirm-password");
+    async function onSubmit(e) {
+      e.preventDefault()
+      const form = new FormData(e.target)
+      const email = form.get("email")
+      const password = form.get("password")
+      const confirmPassword = form.get("confirm-password")
+      const errorMessage = document.getElementById("error-message")
+      errorMessage.textContent = ""
+      errorMessage.classList.remove("active")
 
       try {
-        await postUsers(email, password, confirmPassword);
-
+        await postUsers(email, password, confirmPassword)
       } catch (err) {
         if (err instanceof PassworLengthError) {
-          console.log("password length err");
-          return;
+          errorMessage.textContent = "パスワードは8文字以上にしてください"
+        } else if (err instanceof PasswordConfirmError) {
+          errorMessage.textContent = "パスワード(確認用)が一致しません"
+        } else {
+          errorMessage.textContent = err.message
         }
+        errorMessage.classList.add("active")
+        return
       }
-
-      window.location = '/login';
+      location.href = "/login"
     }
-
-    class PasswordConfirmError extends Error {};
-    class PassworLengthError extends Error {};
 
     async function postUsers(email, password, confirmPassword) {
-      if (password.length < 8) {
-        throw new PassworLengthError();
-      }
-      
-      if (password !== confirmPassword) {
-        throw new PasswordConfirmError();
-      }
-
-      const res = await fetch("http://localhost:9000/users",{
+      if (password.length < 8) throw new PassworLengthError()
+      if (password !== confirmPassword) throw new PasswordConfirmError()
+      const res = await fetch("http://localhost:9000/users", {
         method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          'email': email,
-          'password': password
-        })
-      });
-      
-      if (201 !== res.status) {
-        const errJson = await res.json();
-        const errCode = errJson.error_code;
-        const reason = errJson.reason;
-
-        console.error(reason ?? "empty error reason");
-        return;
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      })
+      if (res.status !== 201) {
+        const errJson = await res.json()
+        throw new Error(errJson.reason ?? "ユーザー登録に失敗しました。")
       }
     }
-
-
   </script>
 </body>
 </html>

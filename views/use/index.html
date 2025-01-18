@@ -5,25 +5,17 @@
   <title>購入済み食券の使用 | HIU食堂 Web食券販売</title>
 </head>
 <body class="bg-gray-100 flex flex-col justify-between h-dvh">
-  <!-- ヘッダー -->
   <header id="header"></header>
-
-  <!-- メイン -->
   <main class="flex-grow container mx-auto p-4 relative overflow-x-auto">
     <h2 class="text-lg font-bold mb-4 text-gray-700">
       使う食券を選択してください
     </h2>
-
-    <!-- フォーム -->
     <form
       id="ticket-form"
       onsubmit="return onUseTickets(event)"
       class="space-y-4"
     >
-      <!-- チェックボックス一覧を表示する領域 -->
-      <div id="ticketList" class="space-y-2">
-        <!-- GET /meal-tickets/me で取得したデータを描画 -->
-      </div>
+      <div id="ticketList" class="space-y-2"></div>
 
       <div class="sticky bottom-4 flex justify-end">
         <button
@@ -84,10 +76,9 @@
       fetchTickets(); // GET /meal-tickets/me
     });
 
-    // 1. チケット一覧を取得
     async function fetchTickets() {
       try {
-        const res = await fetch('http://localhost:3000/meal-tickets/me');
+        const res = await fetch('http://localhost/meal-tickets/me');
         if (!res.ok) {
           throw new Error(`GET /meal-tickets/me 失敗 (status: ${res.status})`);
         }
@@ -99,7 +90,6 @@
       }
     }
 
-    // 2. チケット一覧をリストとして描画
     function renderTicketList(tickets) {
       const ticketList = document.getElementById('ticketList');
       ticketList.innerHTML = ''; // 初期化
@@ -129,7 +119,6 @@
       });
     }
 
-    // 3. 「使う」ボタン押下 => POST /use-ticket
     async function onUseTickets(event) {
       event.preventDefault();
 
@@ -149,7 +138,7 @@
 
       try {
         // POST /use-ticket (ボディにID配列)
-        const response = await fetch('http://localhost:3000/use-ticket', {
+        const response = await fetch('http://localhost/use-ticket', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(selectedIds),
@@ -182,7 +171,6 @@
       return false;
     }
 
-    // 4. モーダル表示
     const qrModal = document.getElementById('qrModal');
     const qrImage = document.getElementById('qrImage');
 
@@ -192,7 +180,6 @@
       qrModal.classList.add('flex');
     }
 
-    // 5. モーダルを閉じる => DELETE /use-ticket/:token
     async function closeQrModal() {
       // モーダルを閉じる
       qrModal.classList.add('hidden');
@@ -209,7 +196,7 @@
     // トークン削除処理
     async function deleteCurrentToken() {
       try {
-        const delRes = await fetch(`http://localhost:3000/use-ticket/${currentToken}`, {
+        const delRes = await fetch(`http://localhost/use-ticket/${currentToken}`, {
           method: 'DELETE',
         });
         if (delRes.status !== 204) {

@@ -50,8 +50,8 @@ $ npm run build
 
 ```bash
 # webpack serveでサーバーを立ち上げる
-# デフォルトではlocalhost:3000で立ち上がる
-# ※ ホーム画面は http://localhost:3000/home
+# デフォルトではlocalhostで立ち上がる
+# ※ ホーム画面は http://localhost/home
 # project-basic-backendのリポジトリもdocker compose upで立ち上げる必要あり
 $ npm run serve
 ```

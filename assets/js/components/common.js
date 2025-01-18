@@ -53,7 +53,7 @@ const Account = html`
 `;
 
 async function logout() {
-  const res = await fetch("http://localhost:3000/logout",{
+  const res = await fetch("http://localhost/logout",{
     method: "POST",
     credentials: "include"
   });
@@ -70,12 +70,15 @@ export const registerCommonComponents = async () => {
   renderComponent(Header, 'header');
   renderComponent(Footer, 'footer');
 
-  const sessioncheckRes = await fetch("http://localhost:3000/sessioncheck",{
+  const sessioncheckRes = await fetch("http://localhost/sessioncheck",{
     method: "POST",
     credentials: "include"
   });
 
   const sessioncheckResJson = await sessioncheckRes.json();
+
+  console.log(sessioncheckResJson);
+  
   
   if (sessioncheckResJson.isLoggedIn) {
     // Cookieがある場合はアカウントコンポーネントを表示    

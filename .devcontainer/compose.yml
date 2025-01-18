@@ -6,5 +6,8 @@ services:
     privileged: true
     volumes:
       - ../:/project-web-frontend/
-      - /dev/bus/usb:/dev/bus/usb
+      - "/dev:/dev"
       - /var/run/docker.sock:/var/run/docker.sock
+    devices:
+      - "/dev:/dev"
+

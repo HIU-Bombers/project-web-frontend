@@ -3,13 +3,15 @@ services:
     env_file:
       - .env
     build: .
+    privileged: true
     volumes:
       - "${PROJECT_ROOT}:/app"
+      - "/dev/bus/usb:/dev/bus/usb"
     ports:
-      - "3000:3000"
-    restart: always
+      - "80:80"
     working_dir: /app
     command: npm run serve
     extra_hosts:
-      # - "/dev/bus/usb:/dev/bus/usb"
       - "localhost:host-gateway"
+    devices:
+      - "/dev/video0:/dev/video0"

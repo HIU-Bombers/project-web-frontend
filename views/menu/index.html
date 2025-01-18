@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>メニュー | HIU食堂 Web食券販売</title>
+  <title>製品 | HIU食堂 Web食券販売</title>
 </head>
 <body class="bg-gray-100 flex flex-col justify-between h-dvh">
   <header id="header"></header>
@@ -25,7 +25,7 @@
       </ul>
     </nav>
 
-    <form class="mx-5" onsubmit="onSubmit(event)">
+    <form class="mx-auto max-w-screen-md" onsubmit="onSubmit(event)">
       <h2 id="category1" class="font-extrabold text-gray-600 text-2xl mx-6">日替わり</h2>
       <section id="daily-box" class="flex flex-row flex-wrap w-5/6 mx-auto gap-4 p-2"> 
       </section>
@@ -49,9 +49,12 @@
       <section id="other-box" class="flex flex-row flex-wrap w-5/6 mx-auto gap-4 p-2">        
       </section>
 
-      <div class="sticky bottom-9 left-[calc(100vw_-_15vw)] w-fit">
-        <button type="submit" class="w-24 h-24 bg-blue-600 shadow-md rounded-full border-blue-300 border-2">
-          <img src="assets/buy.png" class="w-24 h-auto">
+      <div class="sticky bottom-4 flex justify-end">
+        <button
+          type="submit"
+          class="px-6 py-2 mx-8 bg-blue-600 text-white rounded shadow hover:bg-blue-700
+                 transition-colors">
+          購入
         </button>
       </div>
     </form>
@@ -88,14 +91,12 @@
 
   <script type="module" src="/dist/bundle.js"></script>
   <script>
-    fetch('http://localhost:3000/meal-tickets')
+    fetch('http://localhost/meal-tickets')
     .then((res) => res.json())
     .then((tickets) => {
-      // ① 今日の「日付のみ」を取得（時刻を00:00にする）      
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-      // ② フィルタ：今日以降 & 在庫数が1以上
       const filteredTickets = tickets.filter((ticket) => {
         // sales_at を Date に変換
         const salesDate = new Date(ticket.sales_at); 
@@ -106,7 +107,6 @@
         return (salesDate.toDateString() === today.toDateString()) && (stock >= 1);
       });
 
-      // ③ kind ごとにまとめる
       const groupedMeals = filteredTickets.reduce((acc, item) => {
         // 必要情報を取り出し
         const kind = item.meal.kind;
@@ -132,7 +132,6 @@
         OTHER: 'other-box',
       };
 
-      // ④ DOM に追加
       for (const [kind, mealsArr] of Object.entries(groupedMeals)) {
         const boxEl = document.getElementById(boxMap[kind]);
         if (!boxEl) continue;
@@ -216,7 +215,7 @@
     }
 
     async function executePurchase() {
-      const res = await fetch('http://localhost:3000/meal-tickets/buy', {
+      const res = await fetch('http://localhost/meal-tickets/buy', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json'

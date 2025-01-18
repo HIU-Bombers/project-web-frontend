@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export async function postMealMasterData(sessionId) {
+export async function seedMealsMaster(sessionId) {
   const url = "http://localhost:9000/meals"; 
 
   const csvFilePath = path.join(__dirname, "meals.csv");

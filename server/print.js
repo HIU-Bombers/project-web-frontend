@@ -31,9 +31,13 @@ export function printTicket(date, name, price) {
       .style("NORMAL")
       .text("HIU食堂 Web券売機")
 
-    printer
+    try {
+      printer
       .cut()
       .close()
+    } catch (err) {
+      console.error(err);
+    }
   });
 
 }

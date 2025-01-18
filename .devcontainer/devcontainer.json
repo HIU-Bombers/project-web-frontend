@@ -5,7 +5,9 @@
     "remoteUser": "root",
     "initializeCommand": "bash .devcontainer/HIU-FW.sh",
     "features": {
-      "ghcr.io/devcontainers/features/docker-outside-of-docker":{}
+      "ghcr.io/devcontainers/features/docker-outside-of-docker":{
+        "version": "latest"
+      }
     },
     "customizations": {
         "vscode": {

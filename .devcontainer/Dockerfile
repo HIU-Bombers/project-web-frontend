@@ -9,7 +9,8 @@ RUN apt update -qy && \
         locales \
         vim \
         xdg-utils \
-        usbutils
+        usbutils \
+        v4l-utils
 
 # 情報大Wi-Fiの証明書インポート
 COPY singed_HIU-FW.crt /usr/local/share/ca-certificates/HIU-FW.crt
@@ -23,8 +24,3 @@ RUN echo "ja_JP.UTF-8 UTF-8" >> /etc/locale.gen && \
 ENV LANG=ja_JP.UTF-8
 ENV LANGUAGE=ja_JP:ja
 ENV LC_ALL=ja_JP.UTF-8
-
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-RUN corepack prepare pnpm@9.15.0 --activate
