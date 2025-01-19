@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="w-full max-w-md mx-auto">
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">食券 QRコード読み取り</h1>
+        <div id="qr-reader" class="border-4 border-gray-300 rounded-lg overflow-hidden"></div>
+        <p id="qr-result" class="text-center mt-4 text-gray-700 font-medium"></p>
+    </div>
+
+    <script>
+        const qrReaderElement = document.getElementById('qr-reader');
+        const qrResultElement = document.getElementById('qr-result');
+
+        async function onScanSuccess(decodedText) {
+            const res = await fetch(decodedText, {
+              method: 'GET',
+            });
+
+            qrResultElement.textContent = ` 読み取りに成功しました`;
+            qrReaderElement.classList.remove('border-gray-300', 'border-red-500');
+            qrReaderElement.classList.add('border-green-500');
+        }
+
+        function onScanFailure(error) {
+            qrResultElement.textContent = "";
+            qrReaderElement.classList.remove('border-gray-300', 'border-green-500');
+            qrReaderElement.classList.add('border-red-500');
+        }
+
+        const html5Qrcode = new Html5Qrcode("qr-reader");
+
+        html5Qrcode.start(
+            { facingMode: "environment" },
+            {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+            },
+            onScanSuccess,
+            onScanFailure
+        ).catch(err => {
+            qrResultElement.textContent = `Error initializing scanner: ${err}`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+services:
+  web:
+    env_file:
+      - .env
+    build: .
+    privileged: true
+    volumes:
+      - "${PROJECT_ROOT}:/app"
+      - "/dev/bus/usb:/dev/bus/usb"
+    ports:
+      - "80:80"
+    working_dir: /app
+    command: npm run serve
+    extra_hosts:
+      - "localhost:host-gateway"
+    devices:
+      - "/dev/video0:/dev/video0"

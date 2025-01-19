@@ -7,7 +7,7 @@ const Header = html`
       <div class="flex flex-row space-x-2 justify-start">
         <img src="/assets/imgs/logo.png" alt="logo" class="h-auto w-12">
         <div class="text-2xl font-bold">
-          <a href="#" class="text-sm text-gray-800">HIU Web食券販売</a>
+          <a href="/home" class="text-sm text-gray-800">HIU Web食券販売</a>
         </div>
       </div>
       <div id="account"></div>
@@ -42,8 +42,8 @@ const Account = html`
         <img src="/assets/imgs/account.png" class="w-6 h-auto mt-2" alt="Account">
       </summary>
 
-      <button type="button" @click=${logout} class="z-10 flex flex-row origin-top-right absolute right-0 mt-2 mx-auto w-28 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hover:bg-gray-100">
-        <p class="z-10 x-block w-fit text-left mx-2 py-2 font-extrabold rounded-md text-gray-600">
+      <button type="button" @click=${logout} class="z-50 flex flex-row origin-top-right absolute right-0 mt-2 mx-auto w-28 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hover:bg-gray-100">
+        <p class="z-50 x-block w-fit text-left mx-2 py-2 font-extrabold rounded-md text-gray-600">
           ログアウト
         </p>
         <img src="/assets/imgs/logout.png" class="h-6 w-auto my-auto" alt="Logout">
@@ -53,7 +53,7 @@ const Account = html`
 `;
 
 async function logout() {
-  const res = await fetch("http://localhost:3000/logout",{
+  const res = await fetch("http://localhost/logout",{
     method: "POST",
     credentials: "include"
   });
@@ -70,12 +70,15 @@ export const registerCommonComponents = async () => {
   renderComponent(Header, 'header');
   renderComponent(Footer, 'footer');
 
-  const sessioncheckRes = await fetch("http://localhost:3000/sessioncheck",{
+  const sessioncheckRes = await fetch("http://localhost/sessioncheck",{
     method: "POST",
     credentials: "include"
   });
 
   const sessioncheckResJson = await sessioncheckRes.json();
+
+  console.log(sessioncheckResJson);
+  
   
   if (sessioncheckResJson.isLoggedIn) {
     // Cookieがある場合はアカウントコンポーネントを表示    

@@ -5,7 +5,6 @@ module.exports = {
   mode: 'development',
   entry: {
     main: [
-      'webpack-hot-middleware/client?reload=true',
       './src/entrypoint.js'
     ],
   },
@@ -46,8 +45,5 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-  ],
+  }
 };

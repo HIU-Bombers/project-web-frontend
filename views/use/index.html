@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>購入済み食券の使用 | HIU食堂 Web食券販売</title>
+</head>
+<body class="bg-gray-100 flex flex-col justify-between h-dvh">
+  <header id="header"></header>
+  <main class="flex-grow container mx-auto p-4 relative overflow-x-auto">
+    <h2 class="text-lg font-bold mb-4 text-gray-700">
+      使う食券を選択してください
+    </h2>
+    <form
+      id="ticket-form"
+      onsubmit="return onUseTickets(event)"
+      class="space-y-4"
+    >
+      <div id="ticketList" class="space-y-2"></div>
+
+      <div class="sticky bottom-4 flex justify-end">
+        <button
+          type="submit"
+          class="px-6 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700
+                 transition-colors">
+          使う
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <!-- QRコード表示モーダル -->
+  <div
+    id="qrModal"
+    class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-50 z-50"
+  >
+    <div class="bg-white w-11/12 max-w-md rounded p-6 shadow-md relative flex flex-col">
+      <!-- 閉じるボタン -->
+      <button
+        type="button"
+        class="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+        onclick="closeQrModal()"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+
+      <h2 class="text-xl font-bold mb-4 text-center">QR コード</h2>
+
+      <img
+        id="qrImage"
+        src=""
+        alt="QRコード"
+        class="mx-auto mb-4 max-h-80 object-contain rounded shadow"
+      />
+
+      <p id="qrNote" class="text-sm text-gray-600 text-center">
+        このQRコードを提示してください
+      </p>
+    </div>
+  </div>
+  <nav id="menu"></nav>
+  <footer id="footer"></footer>
+
+  <script type="module" src="/dist/bundle.js"></script>
+  <script>
+    let currentToken = ''; // POST /use-ticket 後に返ってくるトークンを保持
+
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchTickets(); // GET /meal-tickets/me
+    });
+
+    async function fetchTickets() {
+      try {
+        const res = await fetch('http://localhost/meal-tickets/me');
+        if (!res.ok) {
+          throw new Error(`GET /meal-tickets/me 失敗 (status: ${res.status})`);
+        }
+        const tickets = await res.json();
+        renderTicketList(tickets);
+      } catch (err) {
+        console.error('チケット一覧取得エラー:', err);
+        alert('チケット一覧を取得できませんでした');
+      }
+    }
+
+    function renderTicketList(tickets) {
+      const ticketList = document.getElementById('ticketList');
+      ticketList.innerHTML = ''; // 初期化
+
+      tickets.forEach(ticket => {
+        // ticket例: { id, name, price, ... }
+        const ticketId   = ticket.id;
+        const mealName   = ticket.name  || '(不明)';
+        const mealPrice  = ticket.price || '(価格不明)';
+
+        const label = document.createElement('label');
+        label.className = 
+          "block p-3 bg-white rounded shadow hover:bg-gray-50 w-2/3 " +
+          "border border-gray-200 transition-colors cursor-pointer mx-auto";
+
+        label.innerHTML = `
+          <input
+            type="checkbox"
+            name="ticket"
+            value="${ticketId}"
+            class="mr-2 accent-blue-600"
+          />
+          <span class="font-bold text-gray-800">${mealName}</span><br/>
+          <span class="text-sm text-gray-600">価格: ¥${mealPrice}</span>
+        `;
+        ticketList.appendChild(label);
+      });
+    }
+
+    async function onUseTickets(event) {
+      event.preventDefault();
+
+      // 既にトークンが存在する場合、先に削除
+      if (currentToken) {
+        await deleteCurrentToken(); // DELETE /use-ticket/:token
+      }
+
+      // チェックされたチケットIDを取得
+      const checkedBoxes = document.querySelectorAll('input[name="ticket"]:checked');
+      if (checkedBoxes.length === 0) {
+        alert('使う食券が選択されていません');
+        return false;
+      }
+      const selectedIds = Array.from(checkedBoxes).map(box => box.value);
+      console.log('選択されたチケットID:', selectedIds);
+
+      try {
+        // POST /use-ticket (ボディにID配列)
+        const response = await fetch('http://localhost/use-ticket', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(selectedIds),
+        });
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          console.error('POST /use-ticket エラー:', errData);
+          alert(`チケット使用に失敗 (status: ${response.status})`);
+          return false;
+        }
+
+        // 例: { b64qr: "data:image/png;base64,xxxx", token: "abc123..." }
+        const result = await response.json();
+        const qrCode = result.b64qr;
+        currentToken = result.token || '';
+
+        if (!qrCode) {
+          alert('QRコードが返ってきませんでした');
+          return false;
+        }
+
+        // QRコードモーダルを表示
+        showQrModal(qrCode);
+
+      } catch (err) {
+        console.error('POST /use-ticket 通信エラー:', err);
+        alert('通信エラーが発生しました');
+      }
+
+      return false;
+    }
+
+    const qrModal = document.getElementById('qrModal');
+    const qrImage = document.getElementById('qrImage');
+
+    function showQrModal(b64qr) {
+      qrImage.src = b64qr;
+      qrModal.classList.remove('hidden');
+      qrModal.classList.add('flex');
+    }
+
+    async function closeQrModal() {
+      // モーダルを閉じる
+      qrModal.classList.add('hidden');
+      qrModal.classList.remove('flex');
+      qrImage.src = '';
+
+      // トークンがあればサーバーで削除
+      if (currentToken) {
+        await deleteCurrentToken();
+      }
+    }
+    window.closeQrModal = closeQrModal;
+
+    // トークン削除処理
+    async function deleteCurrentToken() {
+      try {
+        const delRes = await fetch(`http://localhost/use-ticket/${currentToken}`, {
+          method: 'DELETE',
+        });
+        if (delRes.status !== 204) {
+          console.warn(`DELETE /use-ticket/${currentToken} 失敗 (status=${delRes.status})`);
+        } else {
+          console.log(`トークン ${currentToken} を削除しました`);
+        }
+      } catch (err) {
+        console.error(`DELETE /use-ticket/${currentToken} 通信エラー:`, err);
+      }
+      currentToken = ''; // クリア
+
+      // 再度チケット一覧を取得して画面更新
+      fetchTickets();
+    }
+
+    // ページ離脱時にもトークンを削除したい場合は
+    window.addEventListener('beforeunload', async function() {
+      if (currentToken) {
+        await deleteCurrentToken();
+      }
+    });
+  </script>
+</body>
+</html>
