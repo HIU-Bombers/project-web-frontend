@@ -403,7 +403,13 @@ app.post('/signin', async (req, res) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(req.body),
-  });  
+  });
+
+  const setCookieHeader = signinRes.headers.raw()['set-cookie']; 
+
+  if (setCookieHeader) {
+    res.setHeader('Set-Cookie', setCookieHeader);
+  }
 
   res.sendStatus(signinRes.status);
 });
