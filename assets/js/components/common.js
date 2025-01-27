@@ -53,7 +53,7 @@ const Account = html`
 `;
 
 async function logout() {
-  const res = await fetch("http://localhost/logout",{
+  const res = await fetch("/logout",{
     method: "POST",
     credentials: "include"
   });
@@ -70,7 +70,7 @@ export const registerCommonComponents = async () => {
   renderComponent(Header, 'header');
   renderComponent(Footer, 'footer');
 
-  const sessioncheckRes = await fetch("http://localhost/sessioncheck",{
+  const sessioncheckRes = await fetch("/sessioncheck",{
     method: "POST",
     credentials: "include"
   });

@@ -185,7 +185,7 @@
 
     async function fetchMealsList() {
       try {
-        const res = await fetch('http://localhost/meals');
+        const res = await fetch('/meals');
         if (!res.ok) throw new Error(`Fetch meals error: ${res.status}`);
 
         const meals = await res.json(); // [{id, name, description, kind, meal_image}, ...]
@@ -341,7 +341,7 @@
       const mealId = tr.dataset.mealId;
 
       try {
-        const res = await fetch(`http://localhost/meals/${mealId}`, {
+        const res = await fetch(`/meals/${mealId}`, {
           method: 'DELETE'
         });
         if (res.status === 204) {
@@ -493,7 +493,7 @@
       }
 
       try {
-        const res = await fetch(`http://localhost/meals`, {
+        const res = await fetch(`/meals`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),

@@ -91,7 +91,7 @@
 
   <script type="module" src="/dist/bundle.js"></script>
   <script>
-    fetch('http://localhost/meal-tickets')
+    fetch('/meal-tickets')
     .then((res) => res.json())
     .then((tickets) => {
       const now = new Date();
@@ -215,7 +215,7 @@
     }
 
     async function executePurchase() {
-      const res = await fetch('http://localhost/meal-tickets/buy', {
+      const res = await fetch('/meal-tickets/buy', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json'

@@ -27,7 +27,7 @@
 
   <script type="module" src="/dist/bundle.js"></script>
   <script>
-    fetch('http://localhost/meal-tickets')
+    fetch('/meal-tickets')
     .then((res) => res.json())
     .then((tickets) => {
       const now = new Date();

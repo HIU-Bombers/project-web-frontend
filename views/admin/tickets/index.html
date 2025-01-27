@@ -128,7 +128,7 @@
 
     async function fetchTickets() {
       try {
-        const res = await fetch('http://localhost/meal-tickets');
+        const res = await fetch('/meal-tickets');
         if (!res.ok) {
           throw new Error(`Fetch error (status: ${res.status})`);
         }
@@ -298,7 +298,7 @@
       };
 
       try {
-        const response = await fetch('http://localhost/meal-tickets', {
+        const response = await fetch('/meal-tickets', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -324,7 +324,7 @@
     // /meals を取得して <select> に追加
     async function fetchMeals() {
       try {
-        const res = await fetch('http://localhost/meals');
+        const res = await fetch('/meals');
         if (!res.ok) {
           throw new Error(`Meals fetch error: ${res.status}`);
         }
