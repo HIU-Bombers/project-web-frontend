@@ -83,7 +83,7 @@
     async function postUsers(email, password, confirmPassword) {
       if (password.length < 8) throw new PassworLengthError()
       if (password !== confirmPassword) throw new PasswordConfirmError()
-      const res = await fetch("http://localhost:9000/users", {
+      const res = await fetch("http://backend:9000/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })

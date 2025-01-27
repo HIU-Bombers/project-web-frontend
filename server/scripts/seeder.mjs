@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function seedMealsMaster(sessionId) {
-  const url = "http://localhost:9000/meals"; 
+  const url = "http://backend:9000/meals"; 
 
   const csvFilePath = path.join(__dirname, "meals.csv");
 

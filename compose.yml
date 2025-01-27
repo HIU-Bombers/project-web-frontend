@@ -5,6 +5,8 @@ services:
     build: .
     privileged: true
     restart: always
+    networks:
+      - project_basics
     volumes:
       - "${PROJECT_ROOT}:/app"
       - "/dev/bus/usb:/dev/bus/usb"
@@ -16,3 +18,9 @@ services:
       - "localhost:host-gateway"
     devices:
       - "/dev/video0:/dev/video0"
+
+networks:
+  project_basics:
+    name: project-basics-network
+    external: true
+

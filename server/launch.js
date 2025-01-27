@@ -31,7 +31,7 @@ function requireLogout(req, res, next) {
 }
 
 async function requireAdmin(req, res, next) {
-  const checkRes = await fetch('http://localhost:9000/meal-tickets/497f6eca-6276-4993-bfeb-53cbbbba6f08', {
+  const checkRes = await fetch('http://backend:9000/meal-tickets/497f6eca-6276-4993-bfeb-53cbbbba6f08', {
     method: "GET",
     headers: {
       'Authorization': `Bearer ${getSessionId(req)}`
@@ -96,7 +96,7 @@ app.get('/seed', async (req, res) => {
 })
 
 app.get('/meals', async (req, res) => {
-  const mealsRes = await fetch("http://localhost:9000/meals", {
+  const mealsRes = await fetch("http://backend:9000/meals", {
     method: "GET",
     mode: "cors",
     credentials: "include",
@@ -109,7 +109,7 @@ app.get('/meals', async (req, res) => {
 });
 
 app.delete('/meals/:mealId', async (req, res) => {
-  const mealsRes = await fetch(`http://localhost:9000/meals/${req.params.mealId}`, {
+  const mealsRes = await fetch(`http://backend:9000/meals/${req.params.mealId}`, {
     method: 'DELETE',
     credentials: 'include',
     headers: {
@@ -121,7 +121,7 @@ app.delete('/meals/:mealId', async (req, res) => {
 });
 
 app.post('/meals', async (req, res) => {
-  const mealsRes = await fetch('http://localhost:9000/meals', {
+  const mealsRes = await fetch('http://backend:9000/meals', {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -135,7 +135,7 @@ app.post('/meals', async (req, res) => {
 });
 
 app.patch('/meals/:mealId', async (req, res) => {
-  const mealsRes = await fetch(`http://localhost:9000/meals/${req.params.mealId}`, {
+  const mealsRes = await fetch(`http://backend:9000/meals/${req.params.mealId}`, {
     method: 'PATCH',
     credentials: 'include',
     headers: {
@@ -151,7 +151,7 @@ app.patch('/meals/:mealId', async (req, res) => {
 });
 
 app.get('/meal-tickets', async (req, res) => {
-  const ticketsRes = await fetch('http://localhost:9000/meal-tickets', {
+  const ticketsRes = await fetch('http://backend:9000/meal-tickets', {
     method: "GET",
     headers: {
     'Authorization': `Bearer ${getSessionId(req)}`
@@ -165,7 +165,7 @@ app.get('/meal-tickets', async (req, res) => {
 });
 
 app.post('/meal-tickets', async (req, res) => {
-  const ticketsRes = await fetch('http://localhost:9000/meal-tickets', {
+  const ticketsRes = await fetch('http://backend:9000/meal-tickets', {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -180,7 +180,7 @@ app.post('/meal-tickets', async (req, res) => {
 
 
 app.patch('/meal-tickets/:ticketId', async (req, res) => {  
-  const ticketsRes = await fetch(`http://localhost:9000/meal-tickets/${req.params.ticketId}`, {
+  const ticketsRes = await fetch(`http://backend:9000/meal-tickets/${req.params.ticketId}`, {
     method: 'PATCH',
     credentials: 'include',
     headers: {
@@ -195,7 +195,7 @@ app.patch('/meal-tickets/:ticketId', async (req, res) => {
 
 
 app.delete('/meal-tickets/:ticketId', async (req, res) => {
-  const ticketsRes = await fetch(`http://localhost:9000/meal-tickets/${req.params.ticketId}`, {
+  const ticketsRes = await fetch(`http://backend:9000/meal-tickets/${req.params.ticketId}`, {
     method: 'DELETE',
     credentials: 'include',
     headers: {
@@ -208,7 +208,7 @@ app.delete('/meal-tickets/:ticketId', async (req, res) => {
 });
 
 app.post('/meal-tickets/buy', async (req, res) => {  
-  const buyRes = await fetch('http://localhost:9000/meal-tickets/buy', {
+  const buyRes = await fetch('http://backend:9000/meal-tickets/buy', {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -222,7 +222,7 @@ app.post('/meal-tickets/buy', async (req, res) => {
 });
 
 app.delete('/meal-tickets/buy', async (req, res) => {  
-  const buyRes = await fetch('http://localhost:9000/meal-tickets/buy', {
+  const buyRes = await fetch('http://backend:9000/meal-tickets/buy', {
     method: 'DELETE',
     credentials: 'include',
     headers: {
@@ -236,7 +236,7 @@ app.delete('/meal-tickets/buy', async (req, res) => {
 });
 
 app.get('/meal-tickets/me', async (req, res) => {  
-  const meRes = await fetch('http://localhost:9000/meal-tickets/me', {
+  const meRes = await fetch('http://backend:9000/meal-tickets/me', {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -249,7 +249,7 @@ app.get('/meal-tickets/me', async (req, res) => {
   const tickets = await Promise.all(ticketsJson.map(async ticket => {
     console.log(ticket.meal_ticket.meal_id);
     
-    const mealRes = await fetch(`http://localhost:9000/meals/${ticket.meal_ticket.meal_id}`, {
+    const mealRes = await fetch(`http://backend:9000/meals/${ticket.meal_ticket.meal_id}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -275,7 +275,7 @@ app.get('/meal-tickets/me', async (req, res) => {
 app.post('/logout', async (req, res) => {
   res.clearCookie('PROJECT_BASICS__SESSION_ID');  // HACK: サーバー側でcookie削除できていない
 
-  // const signoutRes = await fetch("http://localhost:9000/signout",{
+  // const signoutRes = await fetch("http://backend:9000/signout",{
   //   method: "POST",
   //   mode: 'cors',
   //   credentials: 'include',
@@ -293,7 +293,7 @@ app.post('/logout', async (req, res) => {
 });
 
 app.post('/use-ticket', async (req, res) => {
-  const tokenRes = await fetch('http://localhost:9000/meal-tickets/me', {
+  const tokenRes = await fetch('http://backend:9000/meal-tickets/me', {
     method: "POST",
     mode: "cors",
     headers:{
@@ -331,7 +331,7 @@ app.post('/use-ticket', async (req, res) => {
 app.get('/use-ticket/:token', async (req, res) => {
   const token = req.params.token;
 
-  const useRes = await fetch('http://localhost:9000/meal-tickets/me/use', {
+  const useRes = await fetch('http://backend:9000/meal-tickets/me/use', {
     method: "POST",
     mode: "cors",
     headers:{
@@ -365,7 +365,7 @@ app.get('/use-ticket/:token', async (req, res) => {
 app.delete('/use-ticket/:token', async (req, res) => {
   const token = req.params.token;
 
-  const response = await fetch('http://localhost:9000/meal-tickets/me', {
+  const response = await fetch('http://backend:9000/meal-tickets/me', {
     method: "DELETE",
     mode: "cors",
     headers:{
