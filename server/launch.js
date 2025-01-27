@@ -405,10 +405,15 @@ app.post('/signin', async (req, res) => {
     body: JSON.stringify(req.body),
   });
 
-  const setCookieHeader = signinRes.headers.raw()['set-cookie']; 
+  const setCookies = [];
+  for (const [key, value] of signinRes.headers.entries()) {
+    if (key.toLowerCase() === 'set-cookie') {
+      setCookies.push(value);
+    }
+  }
 
-  if (setCookieHeader) {
-    res.setHeader('Set-Cookie', setCookieHeader);
+  if (setCookies.length > 0) {
+    res.setHeader('Set-Cookie', setCookies);
   }
 
   res.sendStatus(signinRes.status);
