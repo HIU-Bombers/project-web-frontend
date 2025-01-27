@@ -259,7 +259,7 @@
         // 画像あり or no-img.png
         const imgEl = document.createElement('img');
         imgEl.src = meal.meal_image ? 
-          `http://backend:9000/${meal.meal_image}` :
+          `http://160.251.137.212:9000/${meal.meal_image}` :
           'assets/no-img.png'; 
         imgEl.alt = 'meal image';
         imgEl.className = 'w-16 h-auto rounded cursor-pointer';
@@ -372,7 +372,7 @@
       replaceImageFile.value = '';
 
       if (imageUrl) {
-        bigPreview.src = `http://backend:9000/${imageUrl}`;
+        bigPreview.src = `http://160.251.137.212:9000/${imageUrl}`;
         bigPreview.classList.remove('hidden');
       } else {
         bigPreview.src = '';

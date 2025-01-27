@@ -382,6 +382,32 @@ app.delete('/use-ticket/:token', async (req, res) => {
   res.sendStatus(response.status);
 });
 
+app.post('/users', async (req, res) => {
+  const usersRes = await fetch('http://backend:9000/users', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(req.body),
+  });  
+
+  res.sendStatus(usersRes.status);
+});
+
+app.post('/signin', async (req, res) => {
+  const signinRes = await fetch('http://backend:9000/signin', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(req.body),
+  });  
+
+  res.sendStatus(signinRes.status);
+});
+
 
 app.listen(80, () => {
   console.log('Server is running on port 80');
