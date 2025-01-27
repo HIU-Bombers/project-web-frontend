@@ -15,7 +15,7 @@ services:
     working_dir: /app
     command: npm run serve
     extra_hosts:
-      - "localhost:host-gateway"
+      - "host.docker.internal:host-gateway"
     devices:
       - "/dev/video0:/dev/video0"
 
