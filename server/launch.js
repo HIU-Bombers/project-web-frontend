@@ -59,7 +59,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(async (err, req, res, next) => {
   console.error(err.stack);
 
-  await fetch("http://localhost/logout",{
+  await fetch("/logout",{
     method: "POST",
     credentials: "include"
   });

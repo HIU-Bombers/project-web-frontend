@@ -78,7 +78,7 @@
 
     async function fetchTickets() {
       try {
-        const res = await fetch('http://localhost/meal-tickets/me');
+        const res = await fetch('/meal-tickets/me');
         if (!res.ok) {
           throw new Error(`GET /meal-tickets/me 失敗 (status: ${res.status})`);
         }
@@ -138,7 +138,7 @@
 
       try {
         // POST /use-ticket (ボディにID配列)
-        const response = await fetch('http://localhost/use-ticket', {
+        const response = await fetch('/use-ticket', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(selectedIds),
@@ -196,7 +196,7 @@
     // トークン削除処理
     async function deleteCurrentToken() {
       try {
-        const delRes = await fetch(`http://localhost/use-ticket/${currentToken}`, {
+        const delRes = await fetch(`/use-ticket/${currentToken}`, {
           method: 'DELETE',
         });
         if (delRes.status !== 204) {

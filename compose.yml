@@ -4,6 +4,7 @@ services:
       - .env
     build: .
     privileged: true
+    restart: always
     volumes:
       - "${PROJECT_ROOT}:/app"
       - "/dev/bus/usb:/dev/bus/usb"
