@@ -4,14 +4,20 @@ services:
   nginx-proxy:
     image: nginxproxy/nginx-proxy:latest
     container_name: nginx-proxy
+    # ポート公開
     ports:
-      - "80:80"    # HTTP
-      - "443:443"  # HTTPS
+      - "80:80"
+      - "443:443"
+    # nginx-proxyがどのDockerソケットを見るか
     volumes:
-      - ./certs:/etc/nginx/certs:rw        # 証明書の保存先 (acme-companionと共有)
-      - /etc/nginx/vhost.d                 # 自動生成されるホスト別設定
-      - /usr/share/nginx/html             # チャレンジ用ファイルが置かれる場合
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/nginx/certs:rw
+      - /etc/nginx/vhost.d
+      - /usr/share/nginx/html
+      # 統一して /tmp/docker.sock:ro にマウント
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    # コンテナにラベルを付与
+    labels:
+      - com.github.nginx-proxy.nginx-proxy=true
     networks:
       - project_basics
     restart: always
@@ -21,9 +27,10 @@ services:
     container_name: nginx-proxy-acme
     depends_on:
       - nginx-proxy
+    # nginx-proxyへの証明書共有 & Dockerソケット共有
     volumes:
       - ./certs:/etc/nginx/certs:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - project_basics
     restart: always
