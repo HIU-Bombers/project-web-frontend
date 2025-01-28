@@ -24,6 +24,7 @@
             <input name="password" required type="password" class="bg-gray-100 shadow-md rounded-md">  
           </div>
         </sectoin>
+        <p id="error-message" class="text-red-600 mt-2 ml-1"></p>
         <section class="mx-auto mt-8">
           <button type="submit" class="bg-sky-700 text-white font-bold py-2 px-8 rounded-md drop-shadow-md hover:bg-sky-800">
             ログイン
@@ -38,25 +39,28 @@
   <footer id="footer"></footer>
   
   <script type="module" src="/dist/bundle.js"></script>
-  <script>      
+  <script>
     async function onSubmit(event) {
       event.preventDefault()
 
       const form = new FormData(event.target);
       const email = form.get("email");
       const password = form.get("password");
+      const errorMessage = document.getElementById("error-message")
+      errorMessage.textContent = ""
+      errorMessage.classList.remove("active")
 
       try {
         await postSignin(email, password);
 
       } catch (err) {
+        errorMessage.textContent = "メールアドレスまたは、パスワードが違います"
+        window.location = '/home';
         return;
       }
-      window.location = '/home';
     }
 
     async function postSignin(email, password) {
-      console.log(email);
       
       // cors
       const res = await fetch("http://160.251.137.212:9000/signin", {
@@ -69,11 +73,7 @@
       });
 
       if (200 !== res.status) {
-        const errJson = await res.json();
-        const errCode = errJson.error_code;
-        const reason = errJson.reason;
-
-        console.error(reason ?? "empty error reason");
+        console.error("inernal server err");
         return;
       }
     }
