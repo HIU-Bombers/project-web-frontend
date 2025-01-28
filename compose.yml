@@ -11,10 +11,15 @@ services:
       - ./certs:/etc/nginx/certs:rw
       - /etc/nginx/vhost.d
       - /usr/share/nginx/html
+
+      # 2つのソケットマウントを維持
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
+
+    # ★ ここが重要: エラーメッセージに従い "com.github.nginx-proxy.nginx" を指定
     labels:
-      - com.github.nginx-proxy.nginx-proxy=true
+      - com.github.nginx-proxy.nginx
+
     networks:
       - project_basics
     restart: always
@@ -26,8 +31,11 @@ services:
       - nginx-proxy
     volumes:
       - ./certs:/etc/nginx/certs:rw
+
+      # 2つのソケットマウントを維持
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
+
     networks:
       - project_basics
     restart: always
