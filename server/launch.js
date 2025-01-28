@@ -245,10 +245,9 @@ app.get('/meal-tickets/me', async (req, res) => {
       'Authorization': `Bearer ${getSessionId(req)}`
     },
   });
-  const ticketsJson = await meRes.json();
-
 
   try {
+    const ticketsJson = await meRes.json();
     const tickets = await Promise.all(ticketsJson.map(async ticket => {
       console.log(ticket.meal_ticket.meal_id);
       
