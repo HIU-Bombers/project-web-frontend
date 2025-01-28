@@ -11,15 +11,10 @@ services:
       - ./certs:/etc/nginx/certs:rw
       - /etc/nginx/vhost.d
       - /usr/share/nginx/html
-
-      # * 両方のパスをマウント *
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
-
-    # これを追加することで acme-companion が ID を認識しやすくなる
     labels:
       - com.github.nginx-proxy.nginx-proxy=true
-
     networks:
       - project_basics
     restart: always
@@ -31,11 +26,8 @@ services:
       - nginx-proxy
     volumes:
       - ./certs:/etc/nginx/certs:rw
-
-      # * こちらでも同じように2つマウント *
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
-
     networks:
       - project_basics
     restart: always
