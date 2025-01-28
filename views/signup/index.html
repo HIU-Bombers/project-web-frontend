@@ -72,7 +72,7 @@
         } else if (err instanceof PasswordConfirmError) {
           errorMessage.textContent = "パスワード(確認用)が一致しません"
         } else {
-          errorMessage.textContent = err.message
+          errorMessage.textContent = "エラーが発生しました"
         }
         errorMessage.classList.add("active")
         return
