@@ -73,8 +73,7 @@
       });
 
       if (200 !== res.status) {
-        console.error("inernal server err");
-        return;
+        throw new Error("inernal server err");
       }
     }
   </script>
