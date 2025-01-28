@@ -55,9 +55,9 @@
 
       } catch (err) {
         errorMessage.textContent = "メールアドレスまたは、パスワードが違います"
-        window.location = '/home';
         return;
       }
+      window.location = '/home';
     }
 
     async function postSignin(email, password) {
