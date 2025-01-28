@@ -73,6 +73,8 @@ services:
       - MARIADB_USER=user
       - MARIADB_PASSWORD=password
       - MYSQL_TCP_PORT=3306
+    ports:
+      - "127.0.0.1:3306:3306"
     networks:
       - project_basics
     volumes:
