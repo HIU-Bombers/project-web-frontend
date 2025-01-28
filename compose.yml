@@ -11,13 +11,19 @@ services:
       - ./certs:/etc/nginx/certs:rw
       - /etc/nginx/vhost.d
       - /usr/share/nginx/html
-      # 同じマウント先にする (例: /var/run/docker.sock)
+
+      # * 両方のパスをマウント *
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
+
+    # これを追加することで acme-companion が ID を認識しやすくなる
+    labels:
+      - com.github.nginx-proxy.nginx-proxy=true
+
     networks:
       - project_basics
     restart: always
-  
+
   nginx-proxy-acme:
     image: nginxproxy/acme-companion:latest
     container_name: nginx-proxy-acme
@@ -25,9 +31,11 @@ services:
       - nginx-proxy
     volumes:
       - ./certs:/etc/nginx/certs:rw
-      # こちらも同じように /var/run/docker.sock にマウント
+
+      # * こちらでも同じように2つマウント *
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
+
     networks:
       - project_basics
     restart: always
@@ -52,9 +60,9 @@ services:
     devices:
       - "/dev/video0:/dev/video0"
     environment:
-      - VIRTUAL_HOST=a-shinagawa.com        # ドメイン1
-      - LETSENCRYPT_HOST=a-shinagawa.com    # 同上
-      - LETSENCRYPT_EMAIL=asahushina@gmail.com   # 証明書登録用メールアドレス
+      - VIRTUAL_HOST=a-shinagawa.com
+      - LETSENCRYPT_HOST=a-shinagawa.com
+      - LETSENCRYPT_EMAIL=asahushina@gmail.com
 
   db:
     image: mariadb:10.11.9
@@ -97,6 +105,7 @@ services:
       - HTTP_FRONT_HOST=https://a-shinagawa.com
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+
       - VIRTUAL_HOST=api.a-shinagawa.com
       - LETSENCRYPT_HOST=api.a-shinagawa.com
       - LETSENCRYPT_EMAIL=asahushina@gmail.com
@@ -109,7 +118,6 @@ services:
       - db
       - redis
     restart: always
-
 
 networks:
   project_basics:
