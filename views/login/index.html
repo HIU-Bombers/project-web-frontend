@@ -58,7 +58,8 @@
     async function postSignin(email, password) {
       console.log(email);
       
-      const res = await fetch("/signin", {
+      // cors
+      const res = await fetch("http://160.251.137.212:9000/signin", {
         method: "POST",
         credentials: 'include',
         headers: {
