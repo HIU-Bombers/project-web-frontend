@@ -13,6 +13,7 @@ services:
       - /usr/share/nginx/html
       # 同じマウント先にする (例: /var/run/docker.sock)
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - project_basics
     restart: always
@@ -26,6 +27,7 @@ services:
       - ./certs:/etc/nginx/certs:rw
       # こちらも同じように /var/run/docker.sock にマウント
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
       - project_basics
     restart: always
