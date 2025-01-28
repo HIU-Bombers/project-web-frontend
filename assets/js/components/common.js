@@ -53,7 +53,7 @@ const Account = html`
 `;
 
 async function logout() {
-  const res = await fetch("https://api.a-shinagawa.com/signout",{
+  const res = await fetch("/login",{
     method: "POST",
     credentials: "include"
   });
