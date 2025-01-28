@@ -273,7 +273,14 @@ app.get('/meal-tickets/me', async (req, res) => {
 
 // api
 app.post('/logout', async (req, res) => {
-  res.clearCookie('PROJECT_BASICS__SESSION_ID');  // HACK: サーバー側でcookie削除できていない
+  res.clearCookie('PROJECT_BASICS__SESSION_ID', {
+    domain: '.a-shinagawa.com',
+    path: '/',
+    sameSite: 'None',   // ブラウザによっては 'None' と大文字にしないとダメな場合あり
+    secure: true,       // https
+    httpOnly: true
+  });
+  
 
   // const signoutRes = await fetch("http://backend:9000/signout",{
   //   method: "POST",
