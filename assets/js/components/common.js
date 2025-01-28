@@ -53,7 +53,7 @@ const Account = html`
 `;
 
 async function logout() {
-  const res = await fetch("/login",{
+  const res = await fetch("/logout",{
     method: "POST",
     credentials: "include"
   });
