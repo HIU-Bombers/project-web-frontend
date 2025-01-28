@@ -1,4 +1,42 @@
+version: "3.8"
+
 services:
+  #-------------------------------------------------------------
+  # 1) nginx-proxy : 80/443を公開し、Dockerの他コンテナを代理公開
+  #-------------------------------------------------------------
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"    # HTTP
+      - "443:443"  # HTTPS
+    volumes:
+      - ./certs:/etc/nginx/certs:rw        # 証明書の保存先 (acme-companionと共有)
+      - /etc/nginx/vhost.d                 # 自動生成されるホスト別設定
+      - /usr/share/nginx/html             # チャレンジ用ファイルが置かれる場合
+      - /var/run/docker.sock:/tmp/docker.sock:ro  # 他コンテナのENVを読み取るため
+    networks:
+      - project_basics
+    restart: always
+
+  #-------------------------------------------------------------
+  # 2) acme-companion : Let's Encryptから証明書を自動取得・更新
+  #-------------------------------------------------------------
+  nginx-proxy-acme:
+    image: nginxproxy/acme-companion:latest
+    container_name: nginx-proxy-acme
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - ./certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - project_basics
+    restart: always
+
+  #-------------------------------------------------------------
+  # 3) web (フロントエンド？) : 元々ports:80:80 だったが→ expose に変更
+  #-------------------------------------------------------------
   web:
     env_file:
       - .env
@@ -10,17 +48,99 @@ services:
     volumes:
       - "${PROJECT_ROOT}:/app"
       - "/dev/bus/usb:/dev/bus/usb"
-    ports:
-      - "80:80"
+    # ここはnginx-proxy経由で使うので直接 "ports" を開けず "expose" に
+    expose:
+      - "80"
     working_dir: /app
     command: npm run serve
     extra_hosts:
       - "host.docker.internal:host-gateway"
     devices:
       - "/dev/video0:/dev/video0"
+    environment:
+      - VIRTUAL_HOST=web.example.com        # ドメイン1
+      - LETSENCRYPT_HOST=web.example.com    # 同上
+      - LETSENCRYPT_EMAIL=info@example.com   # 証明書登録用メールアドレス
 
+  #-------------------------------------------------------------
+  # 4) db (MariaDB) : 既存設定そのまま
+  #-------------------------------------------------------------
+  db:
+    image: mariadb:10.11.9
+    container_name: project_basics_mariadb
+    environment:
+      - MARIADB_DATABASE=project_basics
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
+      - MYSQL_TCP_PORT=3306
+    ports:
+      - "3306:3306"
+    networks:
+      - project_basics
+    volumes:
+      - project_basics_mysql_data:/var/lib/mysql
+      - ./docker/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf
+    restart: always
+
+  #-------------------------------------------------------------
+  # 5) redis : 既存設定そのまま
+  #-------------------------------------------------------------
+  redis:
+    image: redislabs/rejson:99.99.98
+    container_name: project_basics_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - project_basics
+    restart: always
+
+  #-------------------------------------------------------------
+  # 6) backend : ポート9000で待ち受けるAPI等
+  #-------------------------------------------------------------
+  backend:
+    build:
+      context: ../project-basics-backend/server
+      dockerfile: ../project-basics-backend/docker/Dockerfile
+    container_name: project_basics_backend
+    networks:
+      - project_basics
+    environment:
+      - MYSQL_DATABASE=project_basics
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - HTTP_PORT=9000
+      - HTTP_FRONT_HOST=http://localhost
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+      # ここも独自ドメインでHTTPS化したいなら指定
+      - VIRTUAL_HOST=api.example.com
+      - LETSENCRYPT_HOST=api.example.com
+      - LETSENCRYPT_EMAIL=info@example.com
+
+    # nginx-proxy経由で公開するなら expose だけでもOK
+    # ただし、外部から直接9000へ接続したいなら ports:9000:9000 を残す
+    expose:
+      - "9000"
+    volumes:
+      - backend-images:/app/images
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+
+#-------------------------------------------------------------
+# ネットワーク & ボリューム設定
+#-------------------------------------------------------------
 networks:
   project_basics:
     name: project-basics-network
     external: true
 
+volumes:
+  project_basics_mysql_data:
+  backend-images:
