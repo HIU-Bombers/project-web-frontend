@@ -92,6 +92,7 @@
   <script type="module" src="/dist/bundle.js"></script>
   <script>
     fetch('/meal-tickets')
+    .catch((err) => console.error('エラー:', err))
     .then((res) => res.json())
     .then((tickets) => {
       const now = new Date();

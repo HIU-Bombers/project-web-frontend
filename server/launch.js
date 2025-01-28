@@ -158,8 +158,10 @@ app.get('/meal-tickets', async (req, res) => {
     }
   });
 
-  console.log(ticketsRes);
-
+  if (ticketsRes.status !== 200) {
+    res.sendStatus(ticketsRes.status);
+    return;
+  }
 
   res.json(await ticketsRes.json());
 });
