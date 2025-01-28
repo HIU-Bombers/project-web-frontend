@@ -248,27 +248,30 @@ app.get('/meal-tickets/me', async (req, res) => {
   const ticketsJson = await meRes.json();
 
 
-  const tickets = await Promise.all(ticketsJson.map(async ticket => {
-    console.log(ticket.meal_ticket.meal_id);
-    
-    const mealRes = await fetch(`http://backend:9000/meals/${ticket.meal_ticket.meal_id}`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Authorization': `Bearer ${getSessionId(req)}`
-      },
-    });
-    const mealJson = await mealRes.json();
-    console.log(ticket);
-
-    return {
-      id: ticket.id,
-      name: mealJson.name,
-      price: ticket.meal_ticket.price
-    };
-  }));
-
-  res.json(tickets);
+  try {
+    const tickets = await Promise.all(ticketsJson.map(async ticket => {
+      console.log(ticket.meal_ticket.meal_id);
+      
+      const mealRes = await fetch(`http://backend:9000/meals/${ticket.meal_ticket.meal_id}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${getSessionId(req)}`
+        },
+      });
+      const mealJson = await mealRes.json();
+      console.log(ticket);
+  
+      return {
+        id: ticket.id,
+        name: mealJson.name,
+        price: ticket.meal_ticket.price
+      };
+    }));
+    res.json(tickets);
+  } catch (e) {
+    res.sendStatus(400);
+  }
 });
 
 
