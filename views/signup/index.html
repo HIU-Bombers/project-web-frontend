@@ -89,8 +89,7 @@
         body: JSON.stringify({ email, password })
       })
       if (res.status !== 201) {
-        const errJson = await res.json()
-        throw new Error(errJson.reason ?? "ユーザー登録に失敗しました。")
+        throw new Error(res.status === 409 ? "既にそのユーザは登録されています" : "ユーザー登録に失敗しました。")
       }
     }
   </script>
